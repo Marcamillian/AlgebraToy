@@ -1,0 +1,15 @@
+{
+  "name": "algebra-toy",
+  "version": "1.0.0",
+  "description": "Toy to play with algebra in a playful way",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tapeTest.js"
+  },
+  "author": "Marc Vousden",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^14.3.0",
+    "tape": "^4.6.3"
+  }
+}
