@@ -4,7 +4,8 @@
   "description": "Toy to play with algebra in a playful way",
   "main": "index.js",
   "scripts": {
-    "test": "node tapeTest.js"
+    "test": "tap testing/*.js",
+    "testfull": "tape testing/*.js"
   },
   "author": "Marc Vousden",
   "license": "MIT",

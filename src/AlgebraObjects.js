@@ -10,7 +10,8 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
 
         if (termValues != undefined && termValues.variables){
             Object.keys(termValues.variables).forEach(function(variableName){
-                state.variables[variableName] = {power: termValues.variables[variableName].power};
+                state.variables[variableName] = {power: (termValues.variables[variableName].power == undefined)? 1 // account fot the fact that power might not have been stated
+                                                            : termValues.variables[variableName].power };
             })
         }
     }
