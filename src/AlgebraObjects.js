@@ -85,8 +85,38 @@ const TermOperators = {
         return AlgebraTerm({factor: newFactor, variables: newVariables})
     },
     divide: function divide(term1, term2){ // term1 - numerator -- term2 denominator
+
+        var term1Vars = term1.getVariables();
+        var term1Keys = Object.keys(term1Vars)
+        var term2Vars = term2.getVariables();
+        var term2Keys = Object.keys(term2Vars)
+
+        var newFactor = term1.getFactor() / term2.getFactor();
+        var newVariables = {}
+
         // check to see if we can divide the factors by eachother
+        
+        if(newFactor % 1 != 0){throw new Error("factor not whole number")}
+
         // check to see if we can divide the variables by eachother
+        term1Keys.forEach((variable)=>{
+            newVariables[variable] = term1Vars[variable].power
+        })
+
+        term2Keys.forEach( (variable)=>{ // if the second term doesn't exist on the first - throw an error
+            if(term1Keys.includes(variable)){
+                var newPower = term1Vars[variable].power - term2Vars[variable].power
+                if( newPower != 0){ newVariables[variable].power = newPower
+                }else{
+                    delete newVariables[variable]
+                }
+            }else{ 
+                throw new Error("variables not compatible")
+            }
+        })
+
+        return AlgebraTerm({factor: newFactor, variables: newVariables})
+        
     }
 
 }
