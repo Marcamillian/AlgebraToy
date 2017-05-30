@@ -1,52 +1,46 @@
-const AlgebraObjectDisplay = function(arguments){
 
-     const getHTML = function getHTML(algebraTerm){
 
-        //add the contianer
-        var termHTML = new Element();
-        termHTML.classList.add("algebra-term")
+const getHTML = function getHTML(algebraTerm){
+
+    //add the contianer
+    var termHTML = document.createElement('div'); // TODO: something wrong with creating a new HTML element
+    termHTML.classList.add("algebra-term")
+    
+    //add the factor
+    var factor = document.createElement('div');
+    factor.classList.add("factor");
+    factor.innerHTML = algebraTerm.getFactor().toString();
+
+    //add the factor
+    ////cycle through the vaiables
+    var variables = algebraTerm.getVariables()
+    var variablesHTML = document.createElement('div');
+    Object.keys(variables).forEach(function(variable){
+
+        // add the varibale symbol
+        var variableHTML = document.createElement('div');
+        variableHTML.classList.add("variable");
+        variableHTML.innerHTML = "x"
         
-        // add the positive sign
-        var sign = new Element();
-        sign.classList.add("sign")
-        sign.innerHTML = (!algebraTerm.positive) ?  "-": "";
+        // add the power to the varible symbol
+        var power = document.createElement('div');
+        power.classList.add("power")
+        power.innerHTML = variables[variable].power.toString()
 
-        //add the factor
-        var factor = new Element();
-        factor.classList.add("factor");
-        factor.innerHTML = algebraTerm.factor.toString();
+        variableHTML.appendChild(power)
 
-        //add the factor
-        ////cycle through the vaiables
-        var variables = new Element();
-        Object.keys(algebraTerm.variables).forEach(function(variable){
+        variablesHTML.appendChild(variableHTML)
 
-            // add the varibale symbol
-            var variableHTML = new Element();
-            variableHTML.classList.add("variable");
-            variableHTML.innerHTML = "x"
-            
-            // add the power to the varible symbol
-            var power = new Element();
-            power.classList.add("power")
-            power.innerHTML = variable.power.toString()
+    })
+    
 
-            variableHTML.appendChild(power)
+    // assemble all of the components
+    termHTML.appendChild(factor);
+    termHTML.appendChild(variablesHTML);
 
-            variables.appendChild(variableHTML)
+    return termHTML
+}
 
-        })
-        
-
-        // assemble all of the components
-        termHTML.appendChild(sign)
-        termHTML.appendChild(factor);
-        termHTML.appendChild(variables);
-
-        return termHTML
-    }
-
-    return Object.assign(
-        {getHTML: getHTML}
-    )
+module.exports = {
+    getHTML:getHTML
 }

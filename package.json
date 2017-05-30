@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "tap testing/*.js",
-    "testfull": "tape testing/*.js"
+    "testfull": "tape testing/*.js",
+    "build": "browserify 'src/ClientApp.js' > 'dist/bundle.js'"
   },
   "author": "Marc Vousden",
   "license": "MIT",
   "devDependencies": {
     "browserify": "^14.3.0",
     "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "browserify": "^14.4.0"
   }
 }
