@@ -6,7 +6,7 @@
   "scripts": {
     "test": "tap testing/*.js",
     "testfull": "tape testing/*.js",
-    "build": "browserify 'src/ClientApp.js' > 'dist/bundle.js'"
+    "build": "browserify src/ClientApp.js > dist/bundle.js"
   },
   "author": "Marc Vousden",
   "license": "MIT",

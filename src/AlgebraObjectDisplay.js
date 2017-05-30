@@ -38,6 +38,11 @@ const getHTML = function getHTML(algebraTerm){
     termHTML.appendChild(factor);
     termHTML.appendChild(variablesHTML);
 
+    // attach click functions
+    termHTML.addEventListener('mouseup', function(){
+        AppManager.termSelect(algebraTerm)
+    })
+
     return termHTML
 }
 
