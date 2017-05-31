@@ -30,7 +30,6 @@ const getHTML = function getHTML(algebraTerm){
         variableHTML.appendChild(power)
 
         variablesHTML.appendChild(variableHTML)
-
     })
     
 
