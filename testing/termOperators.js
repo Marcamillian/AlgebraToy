@@ -1,19 +1,20 @@
 test = require('tape');
 
-var AlgebraObjects = require('./../src/AlgebraObjects.js')
+var AlgebraObjects = require('./../src/AlgebraObjects.js');
+var AlgebraTerm = require('./../src/AlgebraObjects.js').AlgebraTerm;
+var AlgebraOperators = require('./../src/AlgebraObjects.js').TermOperators;
 
 test('Addition/subtraction Testing', function(t){
 
     t.test('Terms that should work', function(ts){
         
-        var term = AlgebraObjects.AlgebraTerm;
-        var term1 = term({ factor: 4 })
-        var term2 = term({ factor: 2 })
-        var term3 = term({ factor: -4 })
-        var term4 = term({ factor: -2 })
+        var term1 = AlgebraTerm({ factor: 4 })
+        var term2 = AlgebraTerm({ factor: 2 })
+        var term3 = AlgebraTerm({ factor: -4 })
+        var term4 = AlgebraTerm({ factor: -2 })
 
-        var term5 = term({ factor: 4, variables:{x:{power:2}} })
-        var term6 = term({ factor: 2, variables:{x:{power:2}} })
+        var term5 = AlgebraTerm({ factor: 4, variables:{x:{power:2}} })
+        var term6 = AlgebraTerm({ factor: 2, variables:{x:{power:2}} })
 
         // combining both positive
         var result = AlgebraObjects.TermOperators.add(term1, term2)
@@ -36,11 +37,10 @@ test('Addition/subtraction Testing', function(t){
 
     t.test('Terms that should error ', function(ts){
 
-        var term = AlgebraObjects.AlgebraTerm;
-        var term1 = term({factor: 4, variables:{x:{power:2}} })
-        var term2 = term({factor: 2, variables:{y:{power:2}} })
-        var term3 = term({factor: -2, variables:{x:{power:4}} })
-        var term4 = term({factor: -4, variables:{x:{power:2}} })
+        var term1 = AlgebraTerm({factor: 4, variables:{x:{power:2}} })
+        var term2 = AlgebraTerm({factor: 2, variables:{y:{power:2}} })
+        var term3 = AlgebraTerm({factor: -2, variables:{x:{power:4}} })
+        var term4 = AlgebraTerm({factor: -4, variables:{x:{power:2}} })
 
         // no factor - variables differ
             // variables differ
@@ -57,11 +57,10 @@ test('Addition/subtraction Testing', function(t){
 
 test('Multiplicaton Testing', function(t){
 
-    var term = AlgebraObjects.AlgebraTerm;
-    var term1 = term({factor:2})
-    var term2 = term({factor:-2});
-    var term3 = term({factor: 3, variables:{x:{power:2}} } )
-    var term4 = term({factor:4, variables:{y:{power:1}} } )
+    var term1 = AlgebraTerm({factor:2})
+    var term2 = AlgebraTerm({factor:-2});
+    var term3 = AlgebraTerm({factor: 3, variables:{x:{power:2}} } )
+    var term4 = AlgebraTerm({factor:4, variables:{y:{power:1}} } )
     
     var result = AlgebraObjects.TermOperators.multiply(term1, term2);
     t.equals(result.getFactor(),-4)
@@ -87,14 +86,13 @@ test('Multiplicaton Testing', function(t){
 
 test('Division Testing', function(t){
 
-    var term = AlgebraObjects.AlgebraTerm;
-    var term1 = term({factor:2})
-    var term2 = term({factor:-2});
-    var term3 = term({factor: 3, variables:{x:{power:2}} } )
-    var term4 = term({factor:4, variables:{y:{power:1}} } )
-    var term5 = term({factor: 1, variables:{x:{power:1}} } )
-    var term6 = term({ factor: 3, variables:{ x:{power:3}, y:{power:1} } } )
-    var term7 = term({ factor: 1, variables:{ x:{power:3} } } )
+    var term1 = AlgebraTerm({factor:2})
+    var term2 = AlgebraTerm({factor:-2});
+    var term3 = AlgebraTerm({factor: 3, variables:{x:{power:2}} } )
+    var term4 = AlgebraTerm({factor:4, variables:{y:{power:1}} } )
+    var term5 = AlgebraTerm({factor: 1, variables:{x:{power:1}} } )
+    var term6 = AlgebraTerm({ factor: 3, variables:{ x:{power:3}, y:{power:1} } } )
+    var term7 = AlgebraTerm({ factor: 1, variables:{ x:{power:3} } } )
 
     // divide factors only as a whole number
     var result = AlgebraObjects.TermOperators.divide(term1, term1)
@@ -130,3 +128,23 @@ test('Division Testing', function(t){
 
     t.end()
 } )
+
+test("Compare operators", (t)=>{
+    term1 = AlgebraTerm({ factor: 1, variables: { 'x':{'power':2} } })
+    term2 = AlgebraTerm({ factor: 1, variables: { 'x':{'power':2} } })
+    term3 = AlgebraTerm({ factor: 2, variables: { 'x':{'power':3} } })
+    term4 = AlgebraTerm({ factor: 2, variables: { 'y':{'power':3} } })
+
+    t.ok(AlgebraOperators.sameFactor(term1, term1))
+    t.ok(AlgebraOperators.sameVariables(term1, term1))
+
+    t.ok(AlgebraOperators.sameFactor(term1, term2))
+    t.ok(AlgebraOperators.sameVariables(term1, term2))
+
+    t.notok(AlgebraOperators.sameFactor(term1, term3))
+    t.notok(AlgebraOperators.sameVariables(term1, term4)) // variables are different
+    t.notok(AlgebraOperators.sameVariables(term1, term3)); // powers are different
+    
+    t.end()
+
+})

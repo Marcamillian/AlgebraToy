@@ -3,7 +3,7 @@ const AppManager = function AppManager(){
         operation: "add",
         selectedTerm: undefined
     }
-    const termSelect = function termSelect(term){
+    const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(!state.selectedTerm){
             state.selectedTerm = term
         }else{

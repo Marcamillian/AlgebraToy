@@ -32,6 +32,31 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     )
 }
 
+const AlgebraStatement = function AlgebraStatement(terms){ // terms == array of terms (should this be an object?)
+    var statementContainer = {};
+
+    statementContainer.terms = terms//.slice(0) //TODO: working on compare function so it doesn't have to be the same object
+    statementContainer.factor = 1
+    
+    const getFactor = function getFactor(){
+        return statementContainer.factor();
+    }
+
+    const hasTerm = function hasTerm(searchTerm){
+
+        statementContainer.terms.forEach(function(term){
+            console.log(term.getState())
+            if (searchTerm.getFactor() == term.getFactor()){ return true}
+        })
+        return false
+    }
+
+    return Object.assign(
+        {getFactor: getFactor, 
+         hasTerm: hasTerm}
+    )
+}
+
 const TermOperators = {
     add: function TermAdd(term1, term2){
         // check that the variables are compatable
@@ -115,13 +140,29 @@ const TermOperators = {
             }
         })
 
-        return AlgebraTerm({factor: newFactor, variables: newVariables})
+        return AlgebraTerm({factor: newFactor,
+                            variables: newVariables})
         
+    },
+    sameFactor: function sameFactor(term1, term2){
+        return term1.getFactor() == term2.getFactor()
+    },
+    sameVariables: function sameVariable(term1, term2){
+        var termVariables = Object.keys(term1.getVariables());
+        var match = true;
+
+        termVariables.forEach((variable)=>{
+            if(term2.getVariables()[variable] == undefined ){match = false; return false}// check the variable is there
+            if(term1.getVariables()[variable].power != term2.getVariables()[variable].power){match = false; return false}// check its power is the same
+        })
+
+        return match
     }
 
 }
 
 module.exports = {
     AlgebraTerm: AlgebraTerm,
+    AlgebraStatement: AlgebraStatement,
     TermOperators: TermOperators
 }

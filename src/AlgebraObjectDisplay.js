@@ -3,7 +3,7 @@
 const getHTML = function getHTML(algebraTerm){
 
     //add the contianer
-    var termHTML = document.createElement('div'); // TODO: something wrong with creating a new HTML element
+    var termHTML = document.createElement('div');
     termHTML.classList.add("algebra-term")
     
     //add the factor
@@ -27,14 +27,14 @@ const getHTML = function getHTML(algebraTerm){
         power.classList.add("power")
         power.innerHTML = variables[variable].power.toString()
 
-        variableHTML.appendChild(power)
+        if (variables[variable].power != 1){ variableHTML.appendChild(power) }
 
         variablesHTML.appendChild(variableHTML)
     })
     
 
     // assemble all of the components
-    termHTML.appendChild(factor);
+    if(algebraTerm.getFactor() != 1){termHTML.appendChild(factor);}
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
