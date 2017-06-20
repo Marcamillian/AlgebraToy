@@ -1,7 +1,8 @@
 const AlgebraTerm = function AlgebraTerm(_arguments){
     var state = {
         factor: 1,
-        variables: {}
+        variables: {},
+        parent: {}
     }
     const init = function init(termValues){
         state.factor = (termValues != undefined && termValues.factor != undefined) ? termValues.factor:  1;
@@ -22,38 +23,65 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     const getVariables = function getVariables(){
         return Object.assign(state.variables)
     }
+    const addParent = function addParent(statement){
+        state.parent = statement;
+    }
+    const getParent = function getParent(){
+        return state.parent
+    }
     // make the state
     init(_arguments);
 
     return Object.assign(
         {getVariables: getVariables,
         getFactor: getFactor,
-        getState: getState}
+        getState: getState,
+        addParent: addParent,
+        getParent: getParent}
     )
 }
 
 const AlgebraStatement = function AlgebraStatement(terms){ // terms == array of terms (should this be an object?)
+    var statement = {};
     var statementContainer = {};
 
     statementContainer.terms = terms//.slice(0) //TODO: working on compare function so it doesn't have to be the same object
-    statementContainer.factor = 1
+    statementContainer.multiTerm = AlgebraTerm({variable: 1})
     
-    const getFactor = function getFactor(){
-        return statementContainer.factor();
+    
+    terms.forEach(function(term){
+        term.addParent(statement)
+    })
+
+    const getMultiplyTerm = function getFactor(){
+        return statementContainer.multiTerm;
     }
 
+    const multiplyStatement = function (multiplyTerm){
+        statementContainer.multiTerm = TermOperators.multiply(statementContainer.multiTerm, multiplyTerm)
+    }
+
+    /*
     const hasTerm = function hasTerm(searchTerm){
+        var match = false;
 
+        // match the factors
         statementContainer.terms.forEach(function(term){
-            console.log(term.getState())
-            if (searchTerm.getFactor() == term.getFactor()){ return true}
+            console.log('are these the same', searchTerm.getFactor() == term.getFactor())
+            if (searchTerm.getFactor().toString() == term.getFactor().toString()){ match = true}
         })
-        return false
+        return match
+    }*/
+
+    const hasTerm = function hasTerm(term){
+        return term.getParent() == statement
     }
 
-    return Object.assign(
-        {getFactor: getFactor, 
-         hasTerm: hasTerm}
+    return Object.assign(statement,
+        {getMultiplyTerm: getMultiplyTerm, 
+         inlcudesTerm: includesTerm,
+         multiplyStatement: multiplyStatement
+        }
     )
 }
 

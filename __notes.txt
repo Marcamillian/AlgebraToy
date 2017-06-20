@@ -30,3 +30,26 @@ Event Flow
       - if the wrapper gets added|minused - it appends to the inside of the statement
       
 
+
+== in the same bracket they will add
+
+== outside the bracket will multiply it by the factor
+
+
+THINGS TO DO WITH STATEMENTS - 
+
+- Multiplying the whole THINGS
+- Muliplying inside terms by the multiply factor
+- can a statement be the multiplying factor? -- not in the current build
+ ?? Game controller is the only one that knows what is clicked
+   - it needs to ask if it is a member of a statement
+
+APPROACHES - term has a "parent" that you can check --- test this out
+
+Click inside the bracket - hightlight the factor & all other terms in that statement
+  - click on something highlighted - try to do the calculation
+  - click on something outside - move the hightlight - 
+
+  === QUESTION - how do we know if the term is a part of the statement / factor
+
+=== 
