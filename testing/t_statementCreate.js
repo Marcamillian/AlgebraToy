@@ -11,9 +11,22 @@ test("testing statement creation", function(t){
 
     t.ok(statement)
     t.equal(statement.getMultiplyTerm().getFactor(), 1)
-    t.ok(statement.hasTerm(term1), "testing to see if it includes term")
-    statement.multiplyStatement(term3)
+    t.ok(statement.includesTerm(term1), "testing to see if it includes term")
+    statement.setMultiplyTerm(term3)
     t.equal(statement.getMultiplyTerm().getFactor(), 4)
+
+    t.end()
+})
+
+test("Testing click interaction", function(t){
+    var term1 = AlgebraTerm({factor: 2, variable:'x'});
+    var term2 = AlgebraTerm({factor: 3, variable:'y'});
+    var term3 = AlgebraTerm({factor: 2, variable:'x'});
+
+    var statement = AlgebraStatement([term1, term2])
+
+    t.ok(statement.includesTerm(term1))
+    t.notok(statement.includesTerm(term3))
 
     t.end()
 })

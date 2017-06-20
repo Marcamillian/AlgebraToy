@@ -1,6 +1,6 @@
-1. make sure that the getState doesn't return values that can affect the original - get a shallow copy of the getState
+TODO : 1. make sure that the getState doesn't return values that can affect the original - get a shallow copy of the getState
 
-2. how to compare two objects - e.g. testing cant compare {x: 2, y:2} and {x:2, y:2}
+TODO: 2. how to compare two objects - e.g. testing cant compare {x: 2, y:2} and {x:2, y:2}
 
 ==
 
@@ -21,7 +21,7 @@ Event Flow
       - the current highlights clear
 
 
-? how do we determine what is operatable
+[x] how do we determine what is operatable
   - a factor of a bracket
   - inside the same bracket/statement
   - brackets
@@ -30,21 +30,19 @@ Event Flow
       - if the wrapper gets added|minused - it appends to the inside of the statement
       
 
-
-== in the same bracket they will add
-
-== outside the bracket will multiply it by the factor
+[x] in the same bracket they will add
+[x] outside the bracket will multiply it by the factor
 
 
 THINGS TO DO WITH STATEMENTS - 
 
-- Multiplying the whole THINGS
+- Multiplying the whole THING
 - Muliplying inside terms by the multiply factor
 - can a statement be the multiplying factor? -- not in the current build
- ?? Game controller is the only one that knows what is clicked
+[x] Game controller is the only one that knows what is clicked
    - it needs to ask if it is a member of a statement
 
-APPROACHES - term has a "parent" that you can check --- test this out
+[x]APPROACHES - term has a "parent" that you can check --- test this out
 
 Click inside the bracket - hightlight the factor & all other terms in that statement
   - click on something highlighted - try to do the calculation
@@ -53,3 +51,12 @@ Click inside the bracket - hightlight the factor & all other terms in that state
   === QUESTION - how do we know if the term is a part of the statement / factor
 
 === 
+
+TODO: How to deal with clicked STATEMENTS
+ - two statements to compare - which to replace 
+   - the one inside the statement (multiply)
+   - either one inside the statement
+
+
+
+TODO: multiply out - make a new term in the parent statement -- if there is no term left in the statement the statement disappears

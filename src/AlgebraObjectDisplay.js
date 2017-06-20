@@ -1,5 +1,3 @@
-
-
 const getHTML = function getHTML(algebraTerm){
 
     //add the contianer

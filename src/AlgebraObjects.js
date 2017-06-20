@@ -41,15 +41,15 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     )
 }
 
-const AlgebraStatement = function AlgebraStatement(terms){ // terms == array of terms (should this be an object?)
+const AlgebraStatement = function AlgebraStatement(terms, parent){ // terms == array of terms (should this be an object?)
     var statement = {};
     var statementContainer = {};
+    var parent = parent // for checking outside
 
     statementContainer.terms = terms//.slice(0) //TODO: working on compare function so it doesn't have to be the same object
     statementContainer.multiTerm = AlgebraTerm({variable: 1})
     
-    
-    terms.forEach(function(term){
+    terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.addParent(statement)
     })
 
@@ -57,30 +57,33 @@ const AlgebraStatement = function AlgebraStatement(terms){ // terms == array of 
         return statementContainer.multiTerm;
     }
 
-    const multiplyStatement = function (multiplyTerm){
-        statementContainer.multiTerm = TermOperators.multiply(statementContainer.multiTerm, multiplyTerm)
+    const getParent = function getParent(){
+        return parent
     }
 
-    /*
-    const hasTerm = function hasTerm(searchTerm){
-        var match = false;
+    const setMultiplyTerm = function (multiplyTerm){
+        return statementContainer.multiTerm = TermOperators.multiply(statementContainer.multiTerm, multiplyTerm)
+    }
 
-        // match the factors
-        statementContainer.terms.forEach(function(term){
-            console.log('are these the same', searchTerm.getFactor() == term.getFactor())
-            if (searchTerm.getFactor().toString() == term.getFactor().toString()){ match = true}
-        })
-        return match
-    }*/
-
-    const hasTerm = function hasTerm(term){
+    const includesTerm = function includesTerm(term){
         return term.getParent() == statement
     }
 
+    const addTerm = function addTerm(term){
+        return statementContainer.terms.push(term)
+    }
+
+    const removeTerm = function removeTerm(term){
+        var terms = statementContainer.terms;
+        return terms.splice(terms.indexOf(term),1)
+    }
+
     return Object.assign(statement,
-        {getMultiplyTerm: getMultiplyTerm, 
-         inlcudesTerm: includesTerm,
-         multiplyStatement: multiplyStatement
+        {getMultiplyTerm: getMultiplyTerm,
+         setMultiplyTerm: setMultiplyTerm,
+         includesTerm: includesTerm,
+         getParent: getParent,
+         addTerm, addTerm
         }
     )
 }
