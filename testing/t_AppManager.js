@@ -16,14 +16,35 @@ test("Creating the appManager", (t)=>{
     var statement2 = AlgebraStatement([term3, term4], undefined)
     statement2.setMultiplyTerm(term5)
 
-    var appManager = AppManager(statement1, statement2)
-
-    // adding terms together
-    t.ok(appManager.termSelect)
-    t.equal(statement2.getMultiplyTerm().getFactor(), 3)
+    var appManager = AppManager(statement1, statement2) // create the app manager (with a left and right hand side)
     
-    console.log(" >> ", appManager.termSelect(term1));
-    console.log(" >> ",appManager.termSelect(term2));
+    t.equal(statement2.getMultiplyTerm().getFactor(), 3, "check that the multiply term is applied");
+    t.equal(statement2.getMultiplyTerm(), term5, "check that the term is correct")
+    
+    t.ok(statement1.includesTerm(term1), "LHS statement includes term1");
+    t.ok(statement2.includesTerm(term3), "RHS statement includes term3");
+    t.ok(statement2.includesTerm(term4), "RHS statement includes term4");
+
+    t.ok()
+
+    t.test("clicking inside same statement", function(ts){
+        appManager.termSelect(term1);
+        ts.equal(appManager.termSelect(term2), "add")
+        ts.end()
+    })
+
+    t.test("click on different statements", function(ts){ // this test failing
+        appManager.termSelect(term1);
+        ts.equal(appManager.termSelect(term4), "not same statement")
+        ts.end()
+    })
+    /*
+    t.test("clicking inside same statement", function(ts){  // this test failing
+        appManager.termSelect(term3);
+        ts.equal(appManager.termSelect(term5), "multiply")
+        ts.end()
+    })*/
+
 
     t.end()
 })

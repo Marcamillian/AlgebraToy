@@ -2,9 +2,8 @@ var Operations = require('./AlgebraObjects.js').TermOperators;
 
 const AppManager = function AppManager(LHStatement, RHStatement){
     var state = {
-        operation: "add",
         selectedTerm: undefined,
-        statements: [LHStatement, RHStatement] // TODO: this will need to be updated later for multiple statements
+        statements: [LHStatement, RHStatement]
     }
     const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(!state.selectedTerm){ // if there isn't already a selected term --- set the term and exit
@@ -51,18 +50,18 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     const getMultiplyTerm = function getMultiplyTerm(term1, term2){
         var factor = undefined;
         state.statements.forEach(function(statement){
-            if (statement.getParent() == term1.getParent() ){ factor = term1
-            }else if (statement.getParent() == term2.getParent() ){ factor = term2}
+            var multiTerm = statement.getMultiplyTerm()
+            if (term1 == multiTerm ){ factor = term1; 
+            }else if (term2 == multiTerm ){ factor = term2; }
         })
-        console.log(" >>> ", factor)
-        return (factor) ? factor : false
+        return factor
     }
 
     const addStatement = function addStatement(statement){
         state.statements.push(statement)
     }
 
-    const sameStatement = function sameStatement(term1, term2){
+    const sameStatement = function sameStatement(term1, term2){ // TODO: problem with the tests is here
         return term1.getParent() == term2.getParent()
     }
 
