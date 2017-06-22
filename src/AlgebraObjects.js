@@ -41,33 +41,35 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     )
 }
 
-const AlgebraStatement = function AlgebraStatement(terms, parent){ // terms == array of terms (should this be an object?)
-    var statement = {};
-    var terms = terms;
-    var parent = parent // for checking outside
-    var multiTerm = AlgebraTerm({variable: 1})
-    
-    terms.forEach(function(term){ // make sure all of the terms know who their parent are
+const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // terms == array of terms (should this be an object?)
+    var statement = {
+        name: name,
+        terms : terms,
+        parent : parent, // for checking outside
+        multiTerm : AlgebraTerm({variable: 1})
+    };
+        
+    statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.setParent(statement)
     })
 
     const getMultiplyTerm = function getFactor(){
-        return multiTerm;
+        return statement.multiTerm;
     }
 
     const getParent = function getParent(){
-        return parent
+        return statement.parent
     }
 
     const setMultiplyTerm = function (multiplyTerm){
         multiplyTerm.setParent(statement)
-        return multiTerm = multiplyTerm;
+        return statement.multiTerm = multiplyTerm;
     }
 
     const multiplyStatement = function(multiplyTerm){
-        multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
+        statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
         multiTerm.setParent(statement)
-        return multiTerm
+        return statement.multiTerm
     }
 
     const includesTerm = function includesTerm(term){
@@ -75,19 +77,26 @@ const AlgebraStatement = function AlgebraStatement(terms, parent){ // terms == a
     }
 
     const addTerm = function addTerm(term){
-        return terms.push(term)
+        return statement.terms.push(term)
     }
 
     const removeTerm = function removeTerm(term){
-        return terms.splice(terms.indexOf(term),1)
+        return statement.terms.splice(terms.indexOf(term),1)
     }
 
-    return Object.assign(statement,
+    const getName = function getName(){
+        return statement.name;
+    }
+
+    return Object.assign({},
         {getMultiplyTerm: getMultiplyTerm,
          setMultiplyTerm: setMultiplyTerm,
+         multiplyStatement: multiplyStatement,
+         removeTerm: removeTerm,
          includesTerm: includesTerm,
          getParent: getParent,
-         addTerm, addTerm
+         addTerm, addTerm,
+         getName: getName
         }
     )
 }
