@@ -2,6 +2,13 @@ test = require('tape')
 AlgebraTerm = require('./../src/AlgebraObjects.js').AlgebraTerm;
 AlgebraStatement = require('./../src/AlgebraObjects.js').AlgebraStatement
 
+getTestStatement = function getTestStatement(){
+    var term1 = AlgebraTerm({factor: 2, variable:'x'});
+    var term2 = AlgebraTerm({factor: 3, variable:'y'});
+
+    statement = AlgebraStatement([term1, term2], undefined, "some statement")
+}
+
 test("testing statement creation", function(t){
     var term1 = AlgebraTerm({ factor: 4, variables:{ 'x': {'power':4} } })
     var term2 = AlgebraTerm({ factor: -4, variables:{ 'y': {'power':2} } })
@@ -74,5 +81,54 @@ test("Testing getName", function(t){
 
     t.ok(statement.getName, "getName exisits")
     t.equal(statement.getName(), "some statement")
+    t.end()
+})
+
+test("Testing removeTerm", function (t){
+    var term1 = AlgebraTerm({factor: 2, variable:'x'});
+    var term2 = AlgebraTerm({factor: 3, variable:'y'});
+    var statement = AlgebraStatement([term1, term2], undefined, "some statement")
+
+    statement.removeTerm(term1);
+
+    t.notok(statement.includesTerm(term1), "term 1 removed");
+    t.ok(statement.includesTerm(term2), "term2 still there");
+    t.end()
+})
+
+test("Testing addStatement", function(t){
+    var term1 = AlgebraTerm({factor: 1, variable:'x'});
+    var term2 = AlgebraTerm({factor: 2, variable:'y'});
+    var term3 = AlgebraTerm({factor: 3, variable:'y'});
+    var term4 = AlgebraTerm({factor: 4, variable:'y'});
+
+    var statement = AlgebraStatement([term1, term2], undefined, "some statement")
+    var childStatement = AlgebraStatement([term3,term4], undefined, "childStatement")
+    statement.addStatement(childStatement)
+
+
+    t.ok(statement.includesStatement(childStatement), "The child is part of the statement");
+    t.equals(childStatement.getParent(), statement, "Parent is set on the child")
+    t.end()
+})
+
+test("Testing remove statement", function(t){
+    var term1 = AlgebraTerm({factor: 1, variable:'x'});
+    var term2 = AlgebraTerm({factor: 2, variable:'y'});
+    var term3 = AlgebraTerm({factor: 3, variable:'y'});
+    var term4 = AlgebraTerm({factor: 4, variable:'y'});
+
+    var statement = AlgebraStatement([term1, term2], undefined, "some statement")
+    var childStatement = AlgebraStatement([term3,term4], undefined, "childStatement")
+    statement.addStatement(childStatement);
+
+    t.ok(statement.includesStatement(childStatement), "The child is part of the statement");
+    t.equals(childStatement.getParent(), statement, "Parent is set on the child")
+
+    // remove the child
+    statement.removeStatement(childStatement);
+    t.notok(statement.includesStatement(childStatement))
+    t.notok(statement.removeStatement(statement), "Checking we can't remove it again")
+
     t.end()
 })
