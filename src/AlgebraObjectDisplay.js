@@ -57,11 +57,15 @@ const getStatementHTML = function getStatementHTML(statement){
     var bracketHTML = document.createElement('div')
     bracketHTML.classList.add("bracket")
 
+    // add in any sub statements
+    statement.getStatements().forEach( (subStatement)=>{
+        bracketHTML.appendChild(getStatementHTML(subStatement))
+    })
+
     // create the inside Term HTML
     statement.getTerms().forEach((term)=>{
         bracketHTML.appendChild(getHTML(term))
     })
-
 
     // combine all of the HTML that we have
     statementHTML.appendChild(multiplyTermHTML)

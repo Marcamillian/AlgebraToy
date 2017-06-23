@@ -117,7 +117,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     const getStatements = function getStatements(){
         return statement.statements;
     }
-    const addStatement = function setStatement(addStatement){
+    const addStatement = function addStatement(addStatement){
         addStatement.setParent(statement) // add the parent ref to the child
         statement.statements.push(addStatement)
     }
@@ -151,6 +151,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
          addStatement: addStatement,
          removeStatement: removeStatement,
          includesStatement: includesStatement,
+         getStatements: getStatements,
          getParent: getParent,
          setParent: setParent,
          clearParent: clearParent,
