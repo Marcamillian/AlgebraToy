@@ -6,11 +6,11 @@ var AlgebraTerm = require("../src/AlgebraObjects.js").AlgebraTerm;
 
 getTestSetup = function getTestSetup(){
     var terms = [
-        AlgebraTerm({factor: 2, variable:'x'}),
-        AlgebraTerm({factor: 3, variable:'x'}),
-        AlgebraTerm({factor: 2, variable:'y'}),
-        AlgebraTerm({factor: 2, variable:'y'}),
-        AlgebraTerm({factor: 3}),
+        AlgebraTerm({factor: 2, variables: {x:{power:1}} }),
+        AlgebraTerm({factor: 3, variables: {x:{power:1}} }),
+        AlgebraTerm({factor: 2, variables: {y:{power:1}} }),
+        AlgebraTerm({factor: 2, variables: {y:{power:1}} }),
+        AlgebraTerm({factor: 3, variables: {x:{power:2}} }),
         AlgebraTerm({factor: 4})
     ]
 
@@ -64,18 +64,28 @@ test("testing the click interactions", (t)=>{
     // tetsing the add click interaction
     t.equals(objs.appManager.termSelect(objs.terms[0]), "term set", "Term is being selected")
     t.equals(objs.appManager.getSelectedTerm(), objs.terms[0], "Check that the term is the selected term");
+
     var resultObject = objs.appManager.termSelect(objs.terms[1]);
+
     t.equals(resultObject.operation, "add", "The terms clicked should add")
     t.equals(resultObject.result.getState().factor, 5, "Checking the factor is alright");
-    //t.skip(resultObject.result.getVariables().x, "Checking the variable is alright");
-    //t.skip(resultObject.result.getVariables().x.power, 1, "Checking the variable is alright");
+    t.ok(resultObject.result.getVariables().x, "Checking the variable is alright");
+    t.equal(resultObject.result.getVariables().x.power, 1, "Checking the variable is alright");
 
     t.equals(objs.appManager.getSelectedTerm(), undefined, "Check that the selected term has reset");
 
     // test the multiply interaction
     t.equals(objs.appManager.termSelect(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
     t.ok(objs.appManager.getSelectedTerm(), objs.terms[4], "Term is selected")
-    t.equals(objs.appManager.termSelect(objs.terms[5]).operation, "multiply", "Clicking the nested statements multiplyTerm")
+
+    var resultsObject = objs.appManager.termSelect(objs.terms[5])
+    t.equals(resultsObject.operation, "multiply", "Clicking the nested statements multiplyTerm")
+
+    t.ok(resultsObject.result, "result is received")
+    t.equals(resultsObject.result.getFactor(),12, "The factor is correctly multipled" )
+    t.ok(resultsObject.result.getVariables().x)
+    t.equal(resultsObject.result.getVariables().x.power, 2, "The multiplied factor is correct")
+
     t.end()
     
 })
