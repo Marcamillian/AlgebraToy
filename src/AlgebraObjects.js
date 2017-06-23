@@ -130,6 +130,9 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     const includesStatement = function includesStatement(searchStatement){
         return statement.statements.includes(searchStatement)
     }
+    const isEmpty = function isEmpty(){
+        return statement.terms < 1
+    }
 
     return Object.assign(statement,
         {getMultiplyTerm: getMultiplyTerm,
@@ -145,7 +148,8 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
          includesStatement: includesStatement,
          getParent: getParent,
          setParent: setParent,
-         clearParent: clearParent
+         clearParent: clearParent,
+         isEmpty: isEmpty
         }
     )
 }

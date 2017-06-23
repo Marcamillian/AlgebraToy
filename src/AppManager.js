@@ -24,14 +24,13 @@ const AppManager = function AppManager(LHStatement, RHStatement){
             if(multiplyTerm == undefined){ // -- ADD
                 operation = "add";
                 result = applyAddOperation(term1, term2)
-                //placeAddResult(result, term1)//TODO: implement these
-                //removeAddComponents(term1, term2)
+                placeAddResult(result, term1)//TODO: implement these
+                removeAddComponents(term1, term2)
             }else{  // -- MULTIPLY
                 operation = "multiply"
                 result = applyMultiplyOperation(term1, term2)
-                console.log(result.getState());
-                //placeMultiplyResult(result, (multiplyTerm != term1) ? term1 : term2 )
-                //removeMultiplyComponents(term1, term2)
+                placeMultiplyResult(result, (multiplyTerm != term1) ? term1 : term2 ) // give the one that isn't the multiplyTerm
+                removeMultiplyComponents(multiplyTerm, (multiplyTerm != term1) ? term1 : term2 )
             }
 
         }else{
@@ -48,26 +47,28 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     placeAddResult = function placeAddResult(result, placementTerm){
         var placeLocation = placementTerm.getParent()
         placeLocation.addTerm(result);     // add the result to the statement
-        placeLocation.removeTerm(term);       // remove the terms we added from the term
-        placeLocation.removeTeterrm(state.selectedTerm)
         return true
     }
     removeAddComponents = function removeAddComponents(term1, term2){
         var parentStatement = term1.getParent();
         parentStatement.removeTerm(term1);
         parentStatement.removeTerm(term2)
+        return true
     }
 
     applyMultiplyOperation = function applyMultiplyOperation(term1, term2){
         return Operations.multiply(term1, term2)
     }
-    placeMultiplyResult = function placeMultiplyResult(result, placementTerm){
+    placeMultiplyResult = function placeMultiplyResult(multiResult, placementTerm){
         var placeLocation = placementTerm.getParent().getParent()
         placeLocation.addTerm(multiResult) // add the multiplication result outside the bracket
         return true
     }
     removeMultiplyComponents = function removeMultiplyComponents(multiplyTerm, term){ // TODO : work out the removal for nested statements
-
+        var nestedStatement = term.getParent()
+        nestedStatement.removeTerm(term)// remove the term we just multiplied
+        if(nestedStatement.isEmpty()){ nestedStatement.getParent().removeStatement(nestedStatement) } // remove the statement if its empty
+        return true
     }
 
     const getMultiplyTerm = function getMultiplyTerm(term1, term2){

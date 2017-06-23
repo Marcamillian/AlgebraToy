@@ -31,7 +31,6 @@ getTestSetup = function getTestSetup(){
     }
 }
 
-
 test("testing the setup",(t)=>{
     var objs = getTestSetup();
 
@@ -72,20 +71,36 @@ test("testing the click interactions", (t)=>{
     t.ok(resultObject.result.getVariables().x, "Checking the variable is alright");
     t.equal(resultObject.result.getVariables().x.power, 1, "Checking the variable is alright");
 
+    t.ok(objs.statements[0].includesTerm(resultObject.result), "Check that the result was put in the LHS")
+    t.notok(objs.statements[0].includesTerm(objs.terms[0]), "First Term is removed")
+    t.notok(objs.statements[0].includesTerm(objs.terms[1]), "Second Term is removed")
+
     t.equals(objs.appManager.getSelectedTerm(), undefined, "Check that the selected term has reset");
-
-    // test the multiply interaction
-    t.equals(objs.appManager.termSelect(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
-    t.ok(objs.appManager.getSelectedTerm(), objs.terms[4], "Term is selected")
-
-    var resultsObject = objs.appManager.termSelect(objs.terms[5])
-    t.equals(resultsObject.operation, "multiply", "Clicking the nested statements multiplyTerm")
-
-    t.ok(resultsObject.result, "result is received")
-    t.equals(resultsObject.result.getFactor(),12, "The factor is correctly multipled" )
-    t.ok(resultsObject.result.getVariables().x)
-    t.equal(resultsObject.result.getVariables().x.power, 2, "The multiplied factor is correct")
 
     t.end()
     
+})
+
+test("Testing the multiply click interaction", (t)=>{
+
+    var objs = getTestSetup()
+
+        // test the multiply interaction
+    t.equals(objs.appManager.termSelect(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
+    t.ok(objs.appManager.getSelectedTerm(), objs.terms[4], "Term is selected")
+
+    var resultObject = objs.appManager.termSelect(objs.terms[5])
+    t.equals(resultObject.operation, "multiply", "Clicking the nested statements multiplyTerm")
+
+    t.ok(resultObject.result, "result is received")
+    t.equals(resultObject.result.getFactor(),12, "The factor is correctly multipled" )
+    t.ok(resultObject.result.getVariables().x)
+    t.equal(resultObject.result.getVariables().x.power, 2, "The multiplied variable power is correct")
+
+    t.ok(objs.statements[0].includesTerm(resultObject.result), "result has been added outside the nested term (in LHS)")
+    t.notok(objs.statements[0].includesStatement(objs.statements[2]), "The now empty statement has been removed")
+
+    t.equals(objs.appManager.getSelectedTerm(), undefined, "Check that the selected term has reset");
+
+    t.end()
 })
