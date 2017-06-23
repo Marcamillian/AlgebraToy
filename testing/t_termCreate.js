@@ -76,14 +76,12 @@ test("creating two parallel objects", function(t){
 
 test.skip("Altering the state object after return", function(t){ // TODO: get this sorted
     var testTerm = AlgebraObjects.AlgebraTerm();
-    console.log(testTerm.getState())
+
     var termResults_var = testTerm.getVariables(); 
     var termResults_factor = testTerm.getFactor();
     
     termResults_factor = 3;
     termResults_var['x'] = {power:2}
-
-    console.log(testTerm.getState())
 
     // check that we really did change them
     t.equal(termResults_factor, 3)

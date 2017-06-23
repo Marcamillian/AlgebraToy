@@ -16,18 +16,20 @@ const AppManager = function AppManager(LHStatement, RHStatement){
 
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
+        var result = undefined;
         if(sameStatement(term1, term2)){ // if they are in the same statement
             
             var multiplyTerm = getMultiplyTerm(term1, term2) // this is not picking up multiply
 
             if(multiplyTerm == undefined){ // -- ADD
                 operation = "add";
-                //var result = applyAddOperation(term1, term2)
+                result = applyAddOperation(term1, term2)
                 //placeAddResult(result, term1)//TODO: implement these
                 //removeAddComponents(term1, term2)
             }else{  // -- MULTIPLY
                 operation = "multiply"
-                //var result = applyMultiplyOperation(term1, term2)
+                result = applyMultiplyOperation(term1, term2)
+                console.log(result.getState());
                 //placeMultiplyResult(result, (multiplyTerm != term1) ? term1 : term2 )
                 //removeMultiplyComponents(term1, term2)
             }
@@ -37,7 +39,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         }
 
         state.selectedTerm = undefined;
-        return operation
+        return {operation: operation , result: result}
     }
 
     applyAddOperation = function applyAddOperation(term1, term2){

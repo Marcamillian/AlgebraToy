@@ -19,6 +19,7 @@ test('Addition/subtraction Testing', function(t){
         // combining both positive
         var result = AlgebraObjects.TermOperators.add(term1, term2)
         ts.equal(result.getFactor(), 6)
+        ts.equal(Object.keys(result.getVariables()).length, 0, "There is no length for an empty variables slot")
 
         // combining positive & negative
         var result =AlgebraObjects.TermOperators.add(term1, term4)
@@ -31,6 +32,8 @@ test('Addition/subtraction Testing', function(t){
 
         var result = AlgebraObjects.TermOperators.add(term5, term6)
         ts.equal(result.getFactor(), 6)
+        ts.ok(result.getVariables().x);
+        ts.ok(result.getVariables().x.power = 2)
 
         ts.end()
     })

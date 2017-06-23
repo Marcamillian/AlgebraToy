@@ -64,14 +64,18 @@ test("testing the click interactions", (t)=>{
     // tetsing the add click interaction
     t.equals(objs.appManager.termSelect(objs.terms[0]), "term set", "Term is being selected")
     t.equals(objs.appManager.getSelectedTerm(), objs.terms[0], "Check that the term is the selected term");
-    t.equals(objs.appManager.termSelect(objs.terms[1]), "add", "The terms clicked should add")
+    var resultObject = objs.appManager.termSelect(objs.terms[1]);
+    t.equals(resultObject.operation, "add", "The terms clicked should add")
+    t.equals(resultObject.result.getState().factor, 5, "Checking the factor is alright");
+    //t.skip(resultObject.result.getVariables().x, "Checking the variable is alright");
+    //t.skip(resultObject.result.getVariables().x.power, 1, "Checking the variable is alright");
 
     t.equals(objs.appManager.getSelectedTerm(), undefined, "Check that the selected term has reset");
 
     // test the multiply interaction
     t.equals(objs.appManager.termSelect(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
     t.ok(objs.appManager.getSelectedTerm(), objs.terms[4], "Term is selected")
-    t.equals(objs.appManager.termSelect(objs.terms[5]), "multiply", "Clicking the nested statements multiplyTerm")
+    t.equals(objs.appManager.termSelect(objs.terms[5]).operation, "multiply", "Clicking the nested statements multiplyTerm")
     t.end()
     
 })

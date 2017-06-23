@@ -21,7 +21,7 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         return state.factor
     }
     const getVariables = function getVariables(){
-        return Object.assign(state.variables)
+        return state.variables; 
     }
     const setParent = function addParent(statement){
         state.parent = statement;
