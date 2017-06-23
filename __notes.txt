@@ -1,3 +1,62 @@
-1. make sure that the getState doesn't return values that can affect the original - get a shallow copy of the getState
+TODO : 1. make sure that the getState doesn't return values that can affect the original - get a shallow copy of the getState
 
-2. how to compare two objects - e.g. testing cant compare {x: 2, y:2} and {x:2, y:2}
+TODO: 2. how to compare two objects - e.g. testing cant compare {x: 2, y:2} and {x:2, y:2}
+
+==
+
+Event Flow
+
+- user clicks the element that it wants
+- clicked element becomes active
+  - element highlights in some way
+  - other clickable elements highlight
+- another element clicked
+  = IF 
+    == Element is valid
+      - each element operates on eachother (does one always disappear?)
+    == Element is not valid
+      - the current highlights clear
+      - new element become the only active element
+    == Click is not on a element
+      - the current highlights clear
+
+
+[x] how do we determine what is operatable
+  - a factor of a bracket
+  - inside the same bracket/statement
+  - brackets
+    - are these a special type of wrapper?
+      - if the wrapper gets divided or multiplied - it becomes the factor of the bracket
+      - if the wrapper gets added|minused - it appends to the inside of the statement
+      
+
+[x] in the same bracket they will add
+[x] outside the bracket will multiply it by the factor
+
+
+THINGS TO DO WITH STATEMENTS - 
+
+- Multiplying the whole THING
+- Muliplying inside terms by the multiply factor
+- can a statement be the multiplying factor? -- not in the current build
+[x] Game controller is the only one that knows what is clicked
+   - it needs to ask if it is a member of a statement
+
+[x]APPROACHES - term has a "parent" that you can check --- test this out
+
+Click inside the bracket - hightlight the factor & all other terms in that statement
+  - click on something highlighted - try to do the calculation
+  - click on something outside - move the hightlight - 
+
+  === QUESTION - how do we know if the term is a part of the statement / factor
+
+=== 
+
+TODO: How to deal with clicked STATEMENTS
+ - two statements to compare - which to replace 
+   - the one inside the statement (multiply)
+   - either one inside the statement
+
+
+
+TODO: multiply out - make a new term in the parent statement -- if there is no term left in the statement the statement disappears

@@ -1,7 +1,8 @@
 const AlgebraTerm = function AlgebraTerm(_arguments){
     var state = {
         factor: 1,
-        variables: {}
+        variables: {},
+        parent: {}
     }
     const init = function init(termValues){
         state.factor = (termValues != undefined && termValues.factor != undefined) ? termValues.factor:  1;
@@ -20,7 +21,16 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         return state.factor
     }
     const getVariables = function getVariables(){
-        return Object.assign(state.variables)
+        return state.variables; 
+    }
+    const setParent = function addParent(statement){
+        state.parent = statement;
+    }
+    const getParent = function getParent(){
+        return state.parent
+    }
+    const clearParent = function clearParent(){
+        return state.parent = undefined;
     }
     // make the state
     init(_arguments);
@@ -28,7 +38,119 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     return Object.assign(
         {getVariables: getVariables,
         getFactor: getFactor,
-        getState: getState}
+        getState: getState,
+        setParent: setParent,
+        getParent: getParent,
+        clearParent: clearParent}
+    )
+}
+
+const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // terms == array of terms (should this be an object?)
+    var statement = {
+        name: name,
+        terms : terms, // an arrayof terms
+        statements: [],
+        parent : parent, // for checking outside
+        multiTerm : AlgebraTerm({variable: 1})
+    };
+        
+    statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
+        term.setParent(statement)
+    })
+
+    const getMultiplyTerm = function getFactor(){
+        return statement.multiTerm;
+    }
+
+    const getParent = function getParent(){
+        return statement.parent
+    }
+
+    const setParent = function getParent(parentStatement){
+        return statement.parent = parentStatement
+    }
+    const clearParent = function clearParent(){
+        return statement.parent = undefined;
+    }
+
+    const setMultiplyTerm = function (multiplyTerm){
+        multiplyTerm.setParent(statement)
+        return statement.multiTerm = multiplyTerm;
+    }
+
+    const isMultiplyTerm = function isMultiplyTerm(checkTerm){
+        return statement.multiTerm == checkTerm;
+    }
+
+    const multiplyStatement = function(multiplyTerm){
+        statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
+        multiTerm.setParent(statement)
+        return statement.multiTerm
+    }
+
+    const includesTerm = function includesTerm(searchTerm){
+        return (statement.terms.includes(searchTerm)) ? statement.terms.includes(searchTerm) : statement.multiTerm == searchTerm
+    }
+
+    const addTerm = function addTerm(term){
+        return statement.terms.push(term)
+    }
+    const removeTerm = function removeTerm(term){
+        if(includesTerm(term)){
+            var index = terms.indexOf(term);
+            statement.terms[index].clearParent()
+            statement.terms.splice(index,1)
+            return statement.terms
+        }else{
+            return false;
+        }
+    }
+
+    const getName = function getName(){
+        return statement.name;
+    }
+
+    const getStatements = function getStatements(){
+        return statement.statements;
+    }
+    const addStatement = function setStatement(addStatement){
+        addStatement.setParent(statement) // add the parent ref to the child
+        statement.statements.push(addStatement)
+    }
+    const removeStatement = function removeStatement(removeStatement){
+        if(statement.includesStatement(removeStatement)){
+            var index = statement.statements.indexOf(removeStatement);
+            statement.statements[index].clearParent();
+            return statement.statements.splice(index,1)
+        }else{
+            return false
+        }
+        
+    }
+    const includesStatement = function includesStatement(searchStatement){
+        return statement.statements.includes(searchStatement)
+    }
+    const isEmpty = function isEmpty(){
+        return statement.terms < 1
+    }
+
+    return Object.assign(statement,
+        {getMultiplyTerm: getMultiplyTerm,
+         setMultiplyTerm: setMultiplyTerm,
+         multiplyStatement: multiplyStatement,
+         isMultiplyTerm: isMultiplyTerm,
+         addTerm: addTerm,
+         removeTerm: removeTerm,
+         includesTerm: includesTerm,
+         getName: getName,
+         addStatement: addStatement,
+         removeStatement: removeStatement,
+         includesStatement: includesStatement,
+         getParent: getParent,
+         setParent: setParent,
+         clearParent: clearParent,
+         isEmpty: isEmpty
+        }
     )
 }
 
@@ -115,13 +237,29 @@ const TermOperators = {
             }
         })
 
-        return AlgebraTerm({factor: newFactor, variables: newVariables})
+        return AlgebraTerm({factor: newFactor,
+                            variables: newVariables})
         
+    },
+    sameFactor: function sameFactor(term1, term2){
+        return term1.getFactor() == term2.getFactor()
+    },
+    sameVariables: function sameVariable(term1, term2){
+        var termVariables = Object.keys(term1.getVariables());
+        var match = true;
+
+        termVariables.forEach((variable)=>{
+            if(term2.getVariables()[variable] == undefined ){match = false; return false}// check the variable is there
+            if(term1.getVariables()[variable].power != term2.getVariables()[variable].power){match = false; return false}// check its power is the same
+        })
+
+        return match
     }
 
 }
 
 module.exports = {
     AlgebraTerm: AlgebraTerm,
+    AlgebraStatement: AlgebraStatement,
     TermOperators: TermOperators
 }
