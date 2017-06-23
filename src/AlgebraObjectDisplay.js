@@ -43,6 +43,43 @@ const getHTML = function getHTML(algebraTerm){
     return termHTML
 }
 
+const getStatementHTML = function getStatementHTML(statement){
+
+    // create the statement container
+    var statementHTML = document.createElement('div');
+    statementHTML.classList.add("statement")
+
+    // create the multiply term
+    var multiplyTermHTML = getHTML(statement.getMultiplyTerm());
+    multiplyTermHTML.classList.add("multiply-term")
+
+    // create the bracket
+    var bracketHTML = document.createElement('div')
+    bracketHTML.classList.add("bracket")
+
+    // create the inside Term HTML
+    statement.getTerms().forEach((term)=>{
+        bracketHTML.appendChild(getHTML(term))
+    })
+
+
+    // combine all of the HTML that we have
+    statementHTML.appendChild(multiplyTermHTML)
+    statementHTML.appendChild(bracketHTML)
+
+    return statementHTML
+}
+
+/*
+<div class="statement">
+    <div class="multiply-term"> .. </div>
+    <div class="bracket">
+        <div class="algebra-term"> ... </div>
+        <div class="algebra-term"> ... </div>
+    </div>
+*/
+
 module.exports = {
-    getHTML:getHTML
+    getHTML:getHTML,
+    getStatementHTML
 }

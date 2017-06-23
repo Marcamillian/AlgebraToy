@@ -106,6 +106,10 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         }
     }
 
+    const getTerms = function getTerms(){
+        return statement.terms
+    }
+
     const getName = function getName(){
         return statement.name;
     }
@@ -142,6 +146,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
          addTerm: addTerm,
          removeTerm: removeTerm,
          includesTerm: includesTerm,
+         getTerms: getTerms,
          getName: getName,
          addStatement: addStatement,
          removeStatement: removeStatement,
