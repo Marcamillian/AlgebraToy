@@ -78,14 +78,18 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         return statement.multiTerm = multiplyTerm;
     }
 
+    const isMultiplyTerm = function isMultiplyTerm(checkTerm){
+        return statement.multiTerm == checkTerm;
+    }
+
     const multiplyStatement = function(multiplyTerm){
         statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
         multiTerm.setParent(statement)
         return statement.multiTerm
     }
 
-    const includesTerm = function includesTerm(term){
-        return statement.terms.includes(term)
+    const includesTerm = function includesTerm(searchTerm){
+        return (statement.terms.includes(searchTerm)) ? statement.terms.includes(searchTerm) : statement.multiTerm == searchTerm
     }
 
     const addTerm = function addTerm(term){
@@ -131,6 +135,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         {getMultiplyTerm: getMultiplyTerm,
          setMultiplyTerm: setMultiplyTerm,
          multiplyStatement: multiplyStatement,
+         isMultiplyTerm: isMultiplyTerm,
          addTerm: addTerm,
          removeTerm: removeTerm,
          includesTerm: includesTerm,

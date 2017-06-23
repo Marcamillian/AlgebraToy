@@ -3,10 +3,16 @@ AlgebraTerm = require('./../src/AlgebraObjects.js').AlgebraTerm;
 AlgebraStatement = require('./../src/AlgebraObjects.js').AlgebraStatement
 
 getTestStatement = function getTestStatement(){
-    var term1 = AlgebraTerm({factor: 2, variable:'x'});
-    var term2 = AlgebraTerm({factor: 3, variable:'y'});
+    terms = [ AlgebraTerm({factor: 2, variable:'x'}),
+             AlgebraTerm({factor: 3, variable:'y'}),
+             AlgebraTerm({factor:4})
+    ]
 
-    statement = AlgebraStatement([term1, term2], undefined, "some statement")
+    statement = AlgebraStatement([terms[0], terms[1]], undefined, "some statement")
+    statement.setMultiplyTerm(terms[2])
+
+    return { terms: terms,
+             statement: statement}
 }
 
 test("testing statement creation", function(t){
@@ -130,5 +136,13 @@ test("Testing remove statement", function(t){
     t.notok(statement.includesStatement(childStatement))
     t.notok(statement.removeStatement(statement), "Checking we can't remove it again")
 
+    t.end()
+})
+
+test("Testing isMultiplyTerm", (t)=>{
+    objs = getTestStatement();
+
+    t.ok(objs.statement.isMultiplyTerm(objs.terms[2]), "Testing to see if the multiply terms is correct")
+    t.notok(objs.statement.isMultiplyTerm(objs.terms[1]), "Testing to see if the function fails for something that isn't multiply term")
     t.end()
 })

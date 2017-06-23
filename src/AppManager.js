@@ -68,20 +68,11 @@ const AppManager = function AppManager(LHStatement, RHStatement){
 
     }
 
-    removeSubstatement = function removeSubStatement(statement){
-        if(statement.getParent()){
-            //statement.getParent().removeStatement(statement) // TODO : Do we need to remove the statement
-        }// else cant remove it if its at the top element
-    }
-
     const getMultiplyTerm = function getMultiplyTerm(term1, term2){
-        var factor = undefined;
-        state.statements.forEach(function(statement){
-            var multiTerm = statement.getMultiplyTerm()
-            if (term1 == multiTerm ){ factor = term1; 
-            }else if (term2 == multiTerm ){ factor = term2; }
-        })
-        return factor
+        var parentStatement = term1.getParent()
+
+        return (parentStatement.isMultiplyTerm(term1)) ? term1 :
+                    (parentStatement.isMultiplyTerm(term2) ? term2 : undefined)
     }
 
     const addStatement = function addStatement(statement){
