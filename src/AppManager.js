@@ -22,11 +22,12 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         }else{ // do an operation
             term.setSelected(false);
             state.selectedTerm.setSelected(false);
+            state.selectedTerm.getParent().setSelected(false);
             term.getParent().setSelected(false);
             return operateOnTerm(getSelectedTerm(), term)
         }
     }
-    
+
 
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
