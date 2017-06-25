@@ -69,12 +69,36 @@ test.skip("Testing subStatement display", (t)=>{
     document.body.appendChild(displayHTML);
 })
 
-test("Testing the AppManager clicks", (t)=>{
+test.skip("Testing the AppManager clicks", (t)=>{
     var objs = getTestObjects();
 
     AppManager = AppManager(objs.statements.LHS, objs.statements.RHS);
 
-    console.log(AppManager)
+    
+    var LHSHtml = AlgebraObjectDisplay.getStatementHTML(AppManager.getStatement("LHS"), AppManager.termSelect)
+    var RHSHtml = AlgebraObjectDisplay.getStatementHTML(AppManager.getStatement("RHS"), AppManager.termSelect)
+
+    document.body.appendChild(LHSHtml);
+    document.body.appendChild(RHSHtml);
 
     t.end()
 })
+
+test("Testing the AppManager clicks", (t)=>{
+    var objs = getTestObjects();
+
+    AppManager = AppManager(objs.statements.LHS, objs.statements.RHS);
+    
+    var clickFunction = function(term){
+        AppManager.termSelect(term);
+        AlgebraObjectDisplay.clearStatements(); // clear out the statements that were there before
+        AlgebraObjectDisplay.updateDisplay(AppManager.getStatements(), clickFunction)
+    }
+
+    // display the initial state
+    AlgebraObjectDisplay.updateDisplay(AppManager.getStatements(), clickFunction)
+    
+
+    t.end()
+})
+

@@ -1,4 +1,4 @@
-const getHTML = function getHTML(algebraTerm){
+const getHTML = function getHTML(algebraTerm, clickFunction){
 
     //add the contianer
     var termHTML = document.createElement('div');
@@ -36,21 +36,19 @@ const getHTML = function getHTML(algebraTerm){
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
-    termHTML.addEventListener('mouseup', function(){
-        AppManager.termSelect(algebraTerm)
-    })
+    termHTML.addEventListener('mouseup', function(){console.log(clickFunction(algebraTerm))})
 
     return termHTML
 }
 
-const getStatementHTML = function getStatementHTML(statement){
+const getStatementHTML = function getStatementHTML(statement, clickFunction){
 
     // create the statement container
     var statementHTML = document.createElement('div');
     statementHTML.classList.add("statement")
 
     // create the multiply term
-    var multiplyTermHTML = getHTML(statement.getMultiplyTerm());
+    var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
     multiplyTermHTML.classList.add("multiply-term")
 
     // create the bracket
@@ -64,7 +62,7 @@ const getStatementHTML = function getStatementHTML(statement){
 
     // create the inside Term HTML
     statement.getTerms().forEach((term)=>{
-        bracketHTML.appendChild(getHTML(term))
+        bracketHTML.appendChild(getHTML(term, clickFunction))
     })
 
     // combine all of the HTML that we have
@@ -74,16 +72,31 @@ const getStatementHTML = function getStatementHTML(statement){
     return statementHTML
 }
 
-/*
-<div class="statement">
-    <div class="multiply-term"> .. </div>
-    <div class="bracket">
-        <div class="algebra-term"> ... </div>
-        <div class="algebra-term"> ... </div>
-    </div>
-*/
+const updateDisplay = function updateDisplay(statementArray, clickFunction){
+    LHSHtml = AlgebraObjectDisplay.getStatementHTML(statementArray[0], clickFunction)
+    RHSHtml = AlgebraObjectDisplay.getStatementHTML(statementArray[1], clickFunction)
+
+    document.querySelector('#LHS').appendChild(LHSHtml);
+    document.querySelector('#RHS').appendChild(RHSHtml);
+}
+
+const clearStatements = function clearStatements(){
+    
+    var LHS = document.querySelector('#LHS');
+    var RHS = document.querySelector('#RHS');
+    while(LHS.hasChildNodes()){
+        LHS.removeChild(LHS.lastChild)
+    }
+    while(RHS.hasChildNodes()){
+        RHS.removeChild(RHS.lastChild)
+    }
+    
+    console.log("clear these things")
+}
 
 module.exports = {
     getHTML:getHTML,
-    getStatementHTML
+    getStatementHTML,
+    updateDisplay: updateDisplay,
+    clearStatements: clearStatements
 }

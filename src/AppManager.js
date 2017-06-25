@@ -89,10 +89,20 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         return state.selectedTerm
     }
 
+    const getStatement = function getStatement(side){
+        return (side == 'LHS') ? state.statements[0] : state.statements[1]
+    }
+
+    const getStatements = function getStatements(){
+        return state.statements
+    }
+
     return Object.create(
         { termSelect: termSelect,
             sameStatement:sameStatement,
-            getSelectedTerm: getSelectedTerm
+            getSelectedTerm: getSelectedTerm,
+            getStatement: getStatement,
+            getStatements: getStatements
         }
     )
 }
