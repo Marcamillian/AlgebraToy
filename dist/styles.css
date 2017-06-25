@@ -27,10 +27,14 @@ html{
     display: inline-block;
 }
 
-.algebra-term.selected{
+.statement.selected .algebra-term.selected{
     background-color: red;
 }
 
 .statement.selected{
     background-color: yellow;
+}
+
+.statement.selected .algebra-term{
+    background-color:green;
 }
