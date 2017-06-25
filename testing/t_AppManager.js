@@ -63,6 +63,8 @@ test("testing the click interactions", (t)=>{
     // tetsing the add click interaction
     t.equals(objs.appManager.termSelect(objs.terms[0]), "term set", "Term is being selected")
     t.equals(objs.appManager.getSelectedTerm(), objs.terms[0], "Check that the term is the selected term");
+    t.ok(objs.terms[0].isSelected(), "Checking that the term is selected")
+    //t.ok(objs.statements[0].isSelectedStatement())
 
     var resultObject = objs.appManager.termSelect(objs.terms[1]);
 
@@ -77,6 +79,11 @@ test("testing the click interactions", (t)=>{
 
     t.equals(objs.appManager.getSelectedTerm(), undefined, "Check that the selected term has reset");
 
+    // checking the terms know they are deselected
+    t.notok(objs.terms[0].isSelected())
+    t.notok(objs.terms[1].isSelected())
+    //t.notok(objs.statements[0].isSelectedStatement())
+
     t.end()
     
 })
@@ -88,6 +95,7 @@ test("Testing the multiply click interaction", (t)=>{
         // test the multiply interaction
     t.equals(objs.appManager.termSelect(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
     t.ok(objs.appManager.getSelectedTerm(), objs.terms[4], "Term is selected")
+    t.ok(objs.terms[4].isSelected(), "Checking that the term knows its selected")
 
     var resultObject = objs.appManager.termSelect(objs.terms[5])
     t.equals(resultObject.operation, "multiply", "Clicking the nested statements multiplyTerm")
@@ -101,6 +109,10 @@ test("Testing the multiply click interaction", (t)=>{
     t.notok(objs.statements[0].includesStatement(objs.statements[2]), "The now empty statement has been removed")
 
     t.equals(objs.appManager.getSelectedTerm(), undefined, "Check that the selected term has reset");
+    
+    // checking the terms know they are deselected
+    t.notok(objs.terms[4].isSelected())
+    t.notok(objs.terms[5].isSelected())
 
     t.end()
 })

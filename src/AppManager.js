@@ -8,6 +8,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
+            term.setSelected(true)
             return "term set"
         }else{ // do an operation
             return operateOnTerm(getSelectedTerm(), term)
@@ -17,6 +18,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
         var result = undefined;
+
         if(sameStatement(term1, term2)){ // if they are in the same statement
             
             var multiplyTerm = getMultiplyTerm(term1, term2) // this is not picking up multiply
@@ -52,7 +54,9 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     removeAddComponents = function removeAddComponents(term1, term2){
         var parentStatement = term1.getParent();
         parentStatement.removeTerm(term1);
-        parentStatement.removeTerm(term2)
+        parentStatement.removeTerm(term2);
+        term1.setSelected(false);
+        term2.setSelected(false)
         return true
     }
 
@@ -68,6 +72,9 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         var nestedStatement = term.getParent()
         nestedStatement.removeTerm(term)// remove the term we just multiplied
         if(nestedStatement.isEmpty()){ nestedStatement.getParent().removeStatement(nestedStatement) } // remove the statement if its empty
+
+        multiplyTerm.setSelected(false);
+        term.setSelected(false);
         return true
     }
 
