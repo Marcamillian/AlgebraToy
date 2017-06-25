@@ -105,6 +105,9 @@ test("Testing the multiply click interaction", (t)=>{
     t.ok(resultObject.result.getVariables().x)
     t.equal(resultObject.result.getVariables().x.power, 2, "The multiplied variable power is correct")
 
+    t.ok(resultObject.result.getParent(), "Check that the parent has a result");
+    t.ok(resultObject.result.getParent(), objs.statements[0], "Check that the parent is LHS statement" )
+
     t.ok(objs.statements[0].includesTerm(resultObject.result), "result has been added outside the nested term (in LHS)")
     t.notok(objs.statements[0].includesStatement(objs.statements[2]), "The now empty statement has been removed")
 
@@ -113,6 +116,8 @@ test("Testing the multiply click interaction", (t)=>{
     // checking the terms know they are deselected
     t.notok(objs.terms[4].isSelected())
     t.notok(objs.terms[5].isSelected())
+
+    
 
     t.end()
 })

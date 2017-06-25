@@ -7543,6 +7543,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     }
 
     const addTerm = function addTerm(term){
+        term.setParent(statement)
         return statement.terms.push(term)
     }
     const removeTerm = function removeTerm(term){
