@@ -26,6 +26,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
             return operateOnTerm(getSelectedTerm(), term)
         }
     }
+    
 
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
