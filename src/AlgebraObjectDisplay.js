@@ -96,8 +96,6 @@ const clearStatements = function clearStatements(){
     while(RHS.hasChildNodes()){
         RHS.removeChild(RHS.lastChild)
     }
-    
-    console.log("clear these things")
 }
 
 module.exports = {

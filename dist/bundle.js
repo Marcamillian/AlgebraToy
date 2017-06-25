@@ -7422,8 +7422,6 @@ const clearStatements = function clearStatements(){
     while(RHS.hasChildNodes()){
         RHS.removeChild(RHS.lastChild)
     }
-    
-    console.log("clear these things")
 }
 
 module.exports = {
@@ -7760,7 +7758,12 @@ const AppManager = function AppManager(LHStatement, RHStatement){
             state.selectedTerm.setSelected(false);
             state.selectedTerm.getParent().setSelected(false);
             term.getParent().setSelected(false);
-            return operateOnTerm(getSelectedTerm(), term)
+
+            try{    // try to carry out the operation
+                return operateOnTerm(getSelectedTerm(), term)
+            }catch(err){    // catch anything that might happen
+                console.error(err)
+            }
         }
     }
 
@@ -7778,6 +7781,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                 result = applyAddOperation(term1, term2)
                 placeAddResult(result, term1)//TODO: implement these
                 removeAddComponents(term1, term2)
+                
             }else{  // -- MULTIPLY
                 operation = "multiply"
                 result = applyMultiplyOperation(term1, term2)
@@ -7874,7 +7878,7 @@ AppManager = require('./../src/AppManager').AppManager
 
 var getTestObjects = function getTestObjects(){
     var terms = [ AlgebraTerm({factor: 2, variables:{y:{power:2}} }),   // LHS
-                  AlgebraTerm({factor: 2, variables:{y:{power:2}} }),
+                  AlgebraTerm({factor: 2, variables:{x:{power:2}} }),
                   AlgebraTerm({factor: 2 }),
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // sub Statement
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),

@@ -24,7 +24,12 @@ const AppManager = function AppManager(LHStatement, RHStatement){
             state.selectedTerm.setSelected(false);
             state.selectedTerm.getParent().setSelected(false);
             term.getParent().setSelected(false);
-            return operateOnTerm(getSelectedTerm(), term)
+
+            try{    // try to carry out the operation
+                return operateOnTerm(getSelectedTerm(), term)
+            }catch(err){    // catch anything that might happen
+                console.error(err)
+            }
         }
     }
 
@@ -42,6 +47,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                 result = applyAddOperation(term1, term2)
                 placeAddResult(result, term1)//TODO: implement these
                 removeAddComponents(term1, term2)
+                
             }else{  // -- MULTIPLY
                 operation = "multiply"
                 result = applyMultiplyOperation(term1, term2)
