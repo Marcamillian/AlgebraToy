@@ -7329,6 +7329,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
     //add the contianer
     var termHTML = document.createElement('div');
     termHTML.classList.add("algebra-term")
+    if(algebraTerm.isSelected()){termHTML.classList.add('selected')}
     
     //add the factor
     var factor = document.createElement('div');
@@ -7372,6 +7373,7 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     // create the statement container
     var statementHTML = document.createElement('div');
     statementHTML.classList.add("statement")
+    if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
     // create the multiply term
     var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
@@ -7431,7 +7433,8 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     var state = {
         factor: 1,
         variables: {},
-        parent: {}
+        parent: {},
+        isSelected: false
     }
     const init = function init(termValues){
         state.factor = (termValues != undefined && termValues.factor != undefined) ? termValues.factor:  1;
@@ -7461,6 +7464,17 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     const clearParent = function clearParent(){
         return state.parent = undefined;
     }
+
+    const setSelected = function setSelected(selectSet){
+        if(selectSet == undefined){
+            state.isSelected != state.isSelected
+        }else if(selectSet == true){ state.isSelected = true
+        }else{ state.isSelected = false}
+    }
+
+    const isSelected = function isSelected(){
+        return state.isSelected
+    }
     // make the state
     init(_arguments);
 
@@ -7470,7 +7484,9 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         getState: getState,
         setParent: setParent,
         getParent: getParent,
-        clearParent: clearParent}
+        clearParent: clearParent,
+        setSelected: setSelected,
+        isSelected: isSelected}
     )
 }
 
@@ -7480,7 +7496,8 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1})
+        multiTerm : AlgebraTerm({variable: 1}),
+        isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
@@ -7567,6 +7584,17 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         return statement.terms < 1
     }
 
+    const setSelected = function setSelected(selectSet){
+        if(selectSet == undefined){
+            return statement.isSelected != statement.isSelected
+        }else if(selectSet == true){ return statement.isSelected = true
+        }else{ return statement.isSelected = false }
+    }
+
+    const isSelectedStatement = function isSelectedStatement(){
+        return statement.isSelected
+    }
+
     return Object.assign(statement,
         {getMultiplyTerm: getMultiplyTerm,
          setMultiplyTerm: setMultiplyTerm,
@@ -7584,7 +7612,9 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
          getParent: getParent,
          setParent: setParent,
          clearParent: clearParent,
-         isEmpty: isEmpty
+         isEmpty: isEmpty,
+         setSelected: setSelected,
+         isSelectedStatement: isSelectedStatement
         }
     )
 }
@@ -7709,8 +7739,13 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
+            term.setSelected(true)
+            term.getParent().setSelected(true)
             return "term set"
         }else{ // do an operation
+            term.setSelected(false);
+            state.selectedTerm.setSelected(false);
+            term.getParent().setSelected(false);
             return operateOnTerm(getSelectedTerm(), term)
         }
     }
@@ -7718,6 +7753,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
         var result = undefined;
+
         if(sameStatement(term1, term2)){ // if they are in the same statement
             
             var multiplyTerm = getMultiplyTerm(term1, term2) // this is not picking up multiply
@@ -7753,7 +7789,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     removeAddComponents = function removeAddComponents(term1, term2){
         var parentStatement = term1.getParent();
         parentStatement.removeTerm(term1);
-        parentStatement.removeTerm(term2)
+        parentStatement.removeTerm(term2);
         return true
     }
 
@@ -7769,6 +7805,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         var nestedStatement = term.getParent()
         nestedStatement.removeTerm(term)// remove the term we just multiplied
         if(nestedStatement.isEmpty()){ nestedStatement.getParent().removeStatement(nestedStatement) } // remove the statement if its empty
+
         return true
     }
 

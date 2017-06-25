@@ -22,3 +22,11 @@ html{
 .statement *{
     display: inline-block;
 }
+
+.algebra-term.selected{
+    background-color: red;
+}
+
+.statement.selected{
+    background-color: yellow;
+}

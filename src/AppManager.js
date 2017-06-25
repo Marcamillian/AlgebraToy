@@ -9,8 +9,12 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
             term.setSelected(true)
+            term.getParent().setSelected(true)
             return "term set"
         }else{ // do an operation
+            term.setSelected(false);
+            state.selectedTerm.setSelected(false);
+            term.getParent().setSelected(false);
             return operateOnTerm(getSelectedTerm(), term)
         }
     }
@@ -55,8 +59,6 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         var parentStatement = term1.getParent();
         parentStatement.removeTerm(term1);
         parentStatement.removeTerm(term2);
-        term1.setSelected(false);
-        term2.setSelected(false)
         return true
     }
 
@@ -73,8 +75,6 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         nestedStatement.removeTerm(term)// remove the term we just multiplied
         if(nestedStatement.isEmpty()){ nestedStatement.getParent().removeStatement(nestedStatement) } // remove the statement if its empty
 
-        multiplyTerm.setSelected(false);
-        term.setSelected(false);
         return true
     }
 

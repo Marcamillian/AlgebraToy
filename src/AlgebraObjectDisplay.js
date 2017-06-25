@@ -3,6 +3,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
     //add the contianer
     var termHTML = document.createElement('div');
     termHTML.classList.add("algebra-term")
+    if(algebraTerm.isSelected()){termHTML.classList.add('selected')}
     
     //add the factor
     var factor = document.createElement('div');
@@ -46,6 +47,7 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     // create the statement container
     var statementHTML = document.createElement('div');
     statementHTML.classList.add("statement")
+    if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
     // create the multiply term
     var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
