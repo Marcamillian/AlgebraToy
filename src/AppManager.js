@@ -14,7 +14,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     state.statements[1].addStatement(RHStatement)
 
     const termSelect = function termSelect(term){ // sets the term to be worked on 
-        if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
+        if(state.selectedTerm == undefined || state.selectedTerm == term){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
             term.setSelected(true)
             term.getParent().setSelected(true)

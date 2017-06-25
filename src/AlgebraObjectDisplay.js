@@ -19,7 +19,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
         // add the varibale symbol
         var variableHTML = document.createElement('div');
         variableHTML.classList.add("variable");
-        variableHTML.innerHTML = "x"
+        variableHTML.innerHTML = variable
         
         // add the power to the varible symbol
         var power = document.createElement('div');

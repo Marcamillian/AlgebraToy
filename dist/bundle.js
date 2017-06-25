@@ -7345,7 +7345,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
         // add the varibale symbol
         var variableHTML = document.createElement('div');
         variableHTML.classList.add("variable");
-        variableHTML.innerHTML = "x"
+        variableHTML.innerHTML = variable
         
         // add the power to the varible symbol
         var power = document.createElement('div');
@@ -7750,7 +7750,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     state.statements[1].addStatement(RHStatement)
 
     const termSelect = function termSelect(term){ // sets the term to be worked on 
-        if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
+        if(state.selectedTerm == undefined || state.selectedTerm == term){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
             term.setSelected(true)
             term.getParent().setSelected(true)
@@ -7871,11 +7871,11 @@ AppManager = require('./../src/AppManager').AppManager
 
 
 var getTestObjects = function getTestObjects(){
-    var terms = [ AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // LHS
+    var terms = [ AlgebraTerm({factor: 2, variables:{y:{power:2}} }),   // LHS
                   AlgebraTerm({factor: 2, variables:{y:{power:2}} }),
                   AlgebraTerm({factor: 2 }),
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // sub Statement
-                  AlgebraTerm({factor: 2, variables:{y:{power:2}} }),
+                  AlgebraTerm({factor: 2, variables:{x:{power:2}} }),
                   AlgebraTerm({factor: 2 }),
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // RHS
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),

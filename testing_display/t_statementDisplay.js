@@ -6,11 +6,11 @@ AppManager = require('./../src/AppManager').AppManager
 
 
 var getTestObjects = function getTestObjects(){
-    var terms = [ AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // LHS
+    var terms = [ AlgebraTerm({factor: 2, variables:{y:{power:2}} }),   // LHS
                   AlgebraTerm({factor: 2, variables:{y:{power:2}} }),
                   AlgebraTerm({factor: 2 }),
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // sub Statement
-                  AlgebraTerm({factor: 2, variables:{y:{power:2}} }),
+                  AlgebraTerm({factor: 2, variables:{x:{power:2}} }),
                   AlgebraTerm({factor: 2 }),
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // RHS
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),
