@@ -7379,13 +7379,17 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
     multiplyTermHTML.classList.add("multiply-term")
 
-    // create the bracket
+    // create the bracket - if its not the outside term
     var bracketHTML = document.createElement('div')
-    bracketHTML.classList.add("bracket")
+    if(statement.getName() != 'LHS') {
+        if(statement.getName() !='RHS'){
+            bracketHTML.classList.add("bracket")
+        }
+    }
 
     // add in any sub statements
     statement.getStatements().forEach( (subStatement)=>{
-        bracketHTML.appendChild(getStatementHTML(subStatement))
+        bracketHTML.appendChild(getStatementHTML(subStatement, clickFunction))
     })
 
     // create the inside Term HTML
@@ -7730,12 +7734,20 @@ module.exports = {
 }
 },{}],65:[function(require,module,exports){
 var Operations = require('./AlgebraObjects.js').TermOperators;
+var AlgebraStatement = require('./AlgebraObjects.js').AlgebraStatement;
+
 
 const AppManager = function AppManager(LHStatement, RHStatement){
     var state = {
         selectedTerm: undefined,
-        statements: [LHStatement, RHStatement]
+        statements: [
+            AlgebraStatement([], undefined, 'LHS'),
+            AlgebraStatement([], undefined, 'RHS'),
+        ]
     }
+    state.statements[0].addStatement(LHStatement)
+    state.statements[1].addStatement(RHStatement)
+
     const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term

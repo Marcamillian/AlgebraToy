@@ -27,6 +27,22 @@ test("testing statement creation", function(t){
     t.end()
 })
 
+test("Creating a statement with no inputs", (t)=>{
+
+    var objs = getTestStatement()
+
+    var statement = AlgebraStatement([], undefined, undefined);
+    t.ok(statement, "Seeing that a statement is created");
+    t.notok(statement.isSelectedStatement(), "Testing functions work")
+
+    statement.addStatement(objs.statement);
+
+    t.ok(statement.includesStatement(objs.statement), "Checking that we have added a sub statement");
+
+    t.end()
+
+})
+
 test("Checking that the statement has all the required functions",(t)=>{
     var term1 = AlgebraTerm({factor: 2, variable:'7'})
     var term2 = AlgebraTerm({factor:2, variable: 'y'}) 

@@ -53,13 +53,17 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
     multiplyTermHTML.classList.add("multiply-term")
 
-    // create the bracket
+    // create the bracket - if its not the outside term
     var bracketHTML = document.createElement('div')
-    bracketHTML.classList.add("bracket")
+    if(statement.getName() != 'LHS') {
+        if(statement.getName() !='RHS'){
+            bracketHTML.classList.add("bracket")
+        }
+    }
 
     // add in any sub statements
     statement.getStatements().forEach( (subStatement)=>{
-        bracketHTML.appendChild(getStatementHTML(subStatement))
+        bracketHTML.appendChild(getStatementHTML(subStatement, clickFunction))
     })
 
     // create the inside Term HTML
