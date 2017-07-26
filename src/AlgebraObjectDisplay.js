@@ -37,7 +37,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
-    termHTML.addEventListener('mouseup', function(){console.log(clickFunction(algebraTerm))})
+    termHTML.addEventListener('mouseup', function(){clickFunction(algebraTerm)})
 
     return termHTML
 }

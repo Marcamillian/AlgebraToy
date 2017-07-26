@@ -44,9 +44,17 @@ const AppManager = function AppManager(LHStatement, RHStatement){
 
             if(multiplyTerm == undefined){ // -- ADD
                 operation = "add";
-                result = applyAddOperation(term1, term2)
-                placeAddResult(result, term1)//TODO: implement these
-                removeAddComponents(term1, term2)
+                try{
+                    result = applyAddOperation(term1, term2)
+                    placeAddResult(result, term1)//TODO: implement these
+                    removeAddComponents(term1, term2)
+                }catch(e){
+                    if(/Terms cancelled each other/i.test(e.message)){
+                        removeAddComponents(term1, term2)
+                    }else{ // if its not the error we were looking for - throw it up the chain
+                        throw e
+                    }
+                }
                 
             }else{  // -- MULTIPLY
                 operation = "multiply"

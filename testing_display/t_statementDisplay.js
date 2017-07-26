@@ -15,6 +15,7 @@ var getTestObjects = function getTestObjects(){
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),   // RHS
                   AlgebraTerm({factor: 2, variables:{x:{power:2}} }),
                   AlgebraTerm({factor: 4 }),
+                  AlgebraTerm({factor: -2, variables:{y:{power:2}}}) // [9] to test the combining to negative
     ] 
 
     var LHS = AlgebraStatement([terms[0], terms[1]])
@@ -86,6 +87,8 @@ test.skip("Testing the AppManager clicks", (t)=>{
 
 test("Testing the AppManager clicks", (t)=>{
     var objs = getTestObjects();
+
+    objs.statements.LHS.addTerm(objs.terms[9])
 
     AppManager = AppManager(objs.statements.LHS, objs.statements.RHS);
     
