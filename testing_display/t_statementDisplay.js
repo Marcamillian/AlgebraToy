@@ -98,7 +98,6 @@ test("Testing the AppManager clicks", (t)=>{
     // display the initial state
     AlgebraObjectDisplay.updateDisplay(AppManager.getStatements(), clickFunction)
     
-
     t.end()
 })
 
