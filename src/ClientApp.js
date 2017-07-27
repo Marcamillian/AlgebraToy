@@ -14,15 +14,26 @@ var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
 // create the AppManager
 var appManager = AppManager(LHS, RHS)
 
-var clickFunction = function(term){
-    appManager.termSelect(term);
+var updateDisplay = function updateDisplay(){
     AlgebraObjectDisplay.clearStatements();
-    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
+}
+
+var termClickFunction = function(term){
+    appManager.termSelect(term);
+    updateDisplay()
 }
 
 // display the inital state
 window.onload = function(){
-    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
+
+    // add in the function to add the terms
+    document.querySelector('.addTerm').addEventListener('click',()=>{
+        let term = AlgebraObjects.AlgebraTerm({factor: 5, variables:{x:{power:1}} })
+        appManager.introduceTerm(term)
+        updateDisplay()
+    })
 }
 
 

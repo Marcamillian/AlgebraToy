@@ -399,6 +399,20 @@ const TermOperators = {
         })
 
         return match
+    },
+    compareTerms: function compareTerms(term1, term2){
+       return this.sameFactor(term1, term2) && this.sameVariables(term1, term2)
+    },
+    duplicateTerm: function duplicateTerm(term){
+        let dupFactor = term.getFactor();
+        let origVariables = term.getVariables();
+        let dupVariables = {}
+
+        Object.keys(origVariables).forEach((variable)=>{
+            dupVariables[variable] = {power: origVariables[variable].power}
+        })
+
+        return AlgebraTerm({factor: dupFactor, variables: dupVariables})
     }
 
 }
@@ -539,12 +553,20 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         return state.statements
     }
 
+    const introduceTerm = function itroduceTerm(term){
+        state.statements.forEach((statement)=>{
+            let termCopy = Operations.duplicateTerm(term);
+            statement.addTerm(termCopy)
+        })
+    }
+
     return Object.create(
         { termSelect: termSelect,
             sameStatement:sameStatement,
             getSelectedTerm: getSelectedTerm,
             getStatement: getStatement,
-            getStatements: getStatements
+            getStatements: getStatements,
+            introduceTerm: introduceTerm
         }
     )
 }
@@ -570,15 +592,26 @@ var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
 // create the AppManager
 var appManager = AppManager(LHS, RHS)
 
-var clickFunction = function(term){
-    appManager.termSelect(term);
+var updateDisplay = function updateDisplay(){
     AlgebraObjectDisplay.clearStatements();
-    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
+}
+
+var termClickFunction = function(term){
+    appManager.termSelect(term);
+    updateDisplay()
 }
 
 // display the inital state
 window.onload = function(){
-    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
+
+    // add in the function to add the terms
+    document.querySelector('.addTerm').addEventListener('click',()=>{
+        let term = AlgebraObjects.AlgebraTerm({factor: 5, variables:{x:{power:1}} })
+        appManager.introduceTerm(term)
+        updateDisplay()
+    })
 }
 
 

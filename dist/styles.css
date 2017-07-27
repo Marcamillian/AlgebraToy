@@ -38,3 +38,7 @@ html{
 .statement.selected .algebra-term{
     background-color:green;
 }
+
+button.addTerm{
+    display: block;
+}
