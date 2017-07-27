@@ -128,12 +128,20 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         return state.statements
     }
 
+    const introduceTerm = function itroduceTerm(term){
+        state.statements.forEach((statement)=>{
+            let termCopy = Operations.duplicateTerm(term);
+            statement.addTerm(termCopy)
+        })
+    }
+
     return Object.create(
         { termSelect: termSelect,
             sameStatement:sameStatement,
             getSelectedTerm: getSelectedTerm,
             getStatement: getStatement,
-            getStatements: getStatements
+            getStatements: getStatements,
+            introduceTerm: introduceTerm
         }
     )
 }

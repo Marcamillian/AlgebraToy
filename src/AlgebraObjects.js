@@ -292,6 +292,17 @@ const TermOperators = {
     },
     compareTerms: function compareTerms(term1, term2){
        return this.sameFactor(term1, term2) && this.sameVariables(term1, term2)
+    },
+    duplicateTerm: function duplicateTerm(term){
+        let dupFactor = term.getFactor();
+        let origVariables = term.getVariables();
+        let dupVariables = {}
+
+        Object.keys(origVariables).forEach((variable)=>{
+            dupVariables[variable] = {power: origVariables[variable].power}
+        })
+
+        return AlgebraTerm({factor: dupFactor, variables: dupVariables})
     }
 
 }

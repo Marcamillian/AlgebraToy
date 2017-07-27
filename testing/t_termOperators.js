@@ -155,3 +155,16 @@ test("Compare operators", (t)=>{
     
     t.end()
 })
+
+test("Duplicate Term operator", (t)=>{
+    let term1 = AlgebraTerm({factor: 4, variables:{x:{power:1}} } )
+
+    let termCopy = AlgebraOperators.duplicateTerm(term1)
+
+    t.ok(termCopy, "Test that it actually exists");
+    t.ok(AlgebraOperators.compareTerms(term1, termCopy), "The terms should look the same");
+    t.notok(term1 == termCopy, "Shouldn't be the same object reference")
+    t.ok(term1 == term1, "Checking that this is the same")
+
+    t.end()
+})

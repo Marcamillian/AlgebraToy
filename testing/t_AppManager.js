@@ -3,6 +3,8 @@ test = require('tape')
 var AppManager = require("../src/AppManager.js").AppManager
 var AlgebraStatement = require("../src/AlgebraObjects.js").AlgebraStatement;
 var AlgebraTerm = require("../src/AlgebraObjects.js").AlgebraTerm;
+var Operations = require("../src/AlgebraObjects.js").TermOperators
+
 
 getTestSetup = function getTestSetup(){
     var terms = [
@@ -122,12 +124,24 @@ test("Testing the multiply click interaction", (t)=>{
     t.end()
 })
 
-test.skip("Testing the introduceTerms", (t)=>{
+test("Testing the introduceTerms", (t)=>{
     objs = getTestSetup()
 
     let addTerm = AlgebraTerm({ factor:4, variables:{x:{power:1}} })
 
+    t.ok(objs.appManager.introduceTerm, "Checking that this is a function")
+
     objs.appManager.introduceTerm(addTerm)
-    t.ok(appManager.getStatement('LHS').includesTerm(addTerm), "Check that the term was added to the Left hand side")
-    t.ok(appManager.getStatement('RHS').includesTerm(addTerm), "Check that the term was added to the Right hand side")
+    t.notok(objs.appManager.getStatement('LHS').includesTerm(addTerm), "object reference not added to the equation")
+    t.notok(objs.appManager.getStatement('RHS').includesTerm(addTerm), "object reference not added to the equation")
+    
+    let LHSTerms = objs.appManager.getStatement("LHS").getTerms();
+    let LHSLastTerm = LHSTerms[LHSTerms.length-1]
+    t.ok(Operations.compareTerms(LHSLastTerm, addTerm), "Check that the terms value is the same")
+
+    let RHSTerms = objs.appManager.getStatement("RHS").getTerms();
+    let RHSLastTerm = RHSTerms[LHSTerms.length-1]
+    t.ok(Operations.compareTerms(RHSLastTerm, addTerm), "Check that the terms value is the same")
+
+    t.end()
 })
