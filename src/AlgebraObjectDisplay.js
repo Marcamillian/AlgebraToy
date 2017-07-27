@@ -50,8 +50,10 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
     // create the multiply term
-    var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
-    multiplyTermHTML.classList.add("multiply-term")
+    if(statement.getMultiplyTerm().getFactor()!=1){ // only add an element for the multiply term if its non-1
+        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
+        multiplyTermHTML.classList.add("multiply-term")
+    }
 
     // create the bracket - if its not the outside term
     var bracketHTML = document.createElement('div')
@@ -72,7 +74,7 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     })
 
     // combine all of the HTML that we have
-    statementHTML.appendChild(multiplyTermHTML)
+    if(multiplyTermHTML){statementHTML.appendChild(multiplyTermHTML)}
     statementHTML.appendChild(bracketHTML)
 
     return statementHTML
