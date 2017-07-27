@@ -289,6 +289,9 @@ const TermOperators = {
         })
 
         return match
+    },
+    compareTerms: function compareTerms(term1, term2){
+       return this.sameFactor(term1, term2) && this.sameVariables(term1, term2)
     }
 
 }

@@ -138,16 +138,20 @@ test("Compare operators", (t)=>{
     term3 = AlgebraTerm({ factor: 2, variables: { 'x':{'power':3} } })
     term4 = AlgebraTerm({ factor: 2, variables: { 'y':{'power':3} } })
 
-    t.ok(AlgebraOperators.sameFactor(term1, term1))
-    t.ok(AlgebraOperators.sameVariables(term1, term1))
+    t.ok(AlgebraOperators.sameFactor(term1, term1), "Check if the factors match")
+    t.ok(AlgebraOperators.sameVariables(term1, term1), "Check if the variables match")
+    t.ok(AlgebraOperators.compareTerms(term1, term1), "Combined check for both of the above")
 
-    t.ok(AlgebraOperators.sameFactor(term1, term2))
-    t.ok(AlgebraOperators.sameVariables(term1, term2))
+    t.ok(AlgebraOperators.sameFactor(term1, term2),"Check if the factors match")
+    t.ok(AlgebraOperators.sameVariables(term1, term2), "Check if the variables match")
+    t.ok(AlgebraOperators.compareTerms(term1, term2), "Combined check for both of the above")
+
 
     t.notok(AlgebraOperators.sameFactor(term1, term3))
     t.notok(AlgebraOperators.sameVariables(term1, term4)) // variables are different
     t.notok(AlgebraOperators.sameVariables(term1, term3)); // powers are different
+    t.notok(AlgebraOperators.compareTerms(term1, term3), "Terms are not the same")
+    t.notok(AlgebraOperators.compareTerms(term1, term4), "Terms are not the same")
     
     t.end()
-
 })

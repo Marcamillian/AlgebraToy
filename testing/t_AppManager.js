@@ -121,3 +121,13 @@ test("Testing the multiply click interaction", (t)=>{
 
     t.end()
 })
+
+test.skip("Testing the introduceTerms", (t)=>{
+    objs = getTestSetup()
+
+    let addTerm = AlgebraTerm({ factor:4, variables:{x:{power:1}} })
+
+    objs.appManager.introduceTerm(addTerm)
+    t.ok(appManager.getStatement('LHS').includesTerm(addTerm), "Check that the term was added to the Left hand side")
+    t.ok(appManager.getStatement('RHS').includesTerm(addTerm), "Check that the term was added to the Right hand side")
+})
