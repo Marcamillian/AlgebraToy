@@ -23,6 +23,5 @@ test.skip('testing term HTML', (t)=>{
     t.ok(powerHTML);
     t.equal(powerHTML.length, 0); // shouldn't be anything for power - as power of 1 has no representation
 
-
     t.end()
 })

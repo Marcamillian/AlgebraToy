@@ -2,19 +2,39 @@ html{
     font-size: 24px;
 }
 
-.algebra-term{
-    display:inline-block;
-    border: 1px solid black;
-    padding: 5px;
-    margin: 5px;
+.equation{
+    display: inline-block;
 }
 
-.algebra-term *{
-    display:inline-block;
+.algebra-term{
+    padding: 5px;
+    margin: 5px;
 }
 
 .variable .power{
     font-size: 0.5em;
     position: relative;
     top:-0.5em;
+}
+
+.bracket{
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+    border-radius: 10px;
+}
+
+.statement *{
+    display: inline-block;
+}
+
+.statement.selected .algebra-term.selected{
+    background-color: red;
+}
+
+.statement.selected{
+    background-color: yellow;
+}
+
+.statement.selected .algebra-term{
+    background-color:green;
 }

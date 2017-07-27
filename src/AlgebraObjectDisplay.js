@@ -1,8 +1,9 @@
-const getHTML = function getHTML(algebraTerm){
+const getHTML = function getHTML(algebraTerm, clickFunction){
 
     //add the contianer
     var termHTML = document.createElement('div');
     termHTML.classList.add("algebra-term")
+    if(algebraTerm.isSelected()){termHTML.classList.add('selected')}
     
     //add the factor
     var factor = document.createElement('div');
@@ -18,7 +19,7 @@ const getHTML = function getHTML(algebraTerm){
         // add the varibale symbol
         var variableHTML = document.createElement('div');
         variableHTML.classList.add("variable");
-        variableHTML.innerHTML = "x"
+        variableHTML.innerHTML = variable
         
         // add the power to the varible symbol
         var power = document.createElement('div');
@@ -36,13 +37,72 @@ const getHTML = function getHTML(algebraTerm){
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
-    termHTML.addEventListener('mouseup', function(){
-        AppManager.termSelect(algebraTerm)
-    })
+    termHTML.addEventListener('mouseup', function(){clickFunction(algebraTerm)})
 
     return termHTML
 }
 
+const getStatementHTML = function getStatementHTML(statement, clickFunction){
+
+    // create the statement container
+    var statementHTML = document.createElement('div');
+    statementHTML.classList.add("statement")
+    if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
+
+    // create the multiply term
+    if(statement.getMultiplyTerm().getFactor()!=1){ // only add an element for the multiply term if its non-1
+        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
+        multiplyTermHTML.classList.add("multiply-term")
+    }
+
+    // create the bracket - if its not the outside term
+    var bracketHTML = document.createElement('div')
+    if(statement.getName() != 'LHS') {
+        if(statement.getName() !='RHS'){
+            bracketHTML.classList.add("bracket")
+        }
+    }
+
+    // add in any sub statements
+    statement.getStatements().forEach( (subStatement)=>{
+        bracketHTML.appendChild(getStatementHTML(subStatement, clickFunction))
+    })
+
+    // create the inside Term HTML
+    statement.getTerms().forEach((term)=>{
+        bracketHTML.appendChild(getHTML(term, clickFunction))
+    })
+
+    // combine all of the HTML that we have
+    if(multiplyTermHTML){statementHTML.appendChild(multiplyTermHTML)}
+    statementHTML.appendChild(bracketHTML)
+
+    return statementHTML
+}
+
+const updateDisplay = function updateDisplay(statementArray, clickFunction){
+    LHSHtml = AlgebraObjectDisplay.getStatementHTML(statementArray[0], clickFunction)
+    RHSHtml = AlgebraObjectDisplay.getStatementHTML(statementArray[1], clickFunction)
+
+    document.querySelector('#LHS').appendChild(LHSHtml);
+    document.querySelector('#RHS').appendChild(RHSHtml);
+}
+
+const clearStatements = function clearStatements(){
+    
+    var LHS = document.querySelector('#LHS');
+    var RHS = document.querySelector('#RHS');
+    while(LHS.hasChildNodes()){
+        LHS.removeChild(LHS.lastChild)
+    }
+    while(RHS.hasChildNodes()){
+        RHS.removeChild(RHS.lastChild)
+    }
+}
+
 module.exports = {
-    getHTML:getHTML
+    getHTML:getHTML,
+    getStatementHTML,
+    updateDisplay: updateDisplay,
+    clearStatements: clearStatements
 }

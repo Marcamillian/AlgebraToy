@@ -1,11 +1,10 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-
-
-const getHTML = function getHTML(algebraTerm){
+const getHTML = function getHTML(algebraTerm, clickFunction){
 
     //add the contianer
     var termHTML = document.createElement('div');
     termHTML.classList.add("algebra-term")
+    if(algebraTerm.isSelected()){termHTML.classList.add('selected')}
     
     //add the factor
     var factor = document.createElement('div');
@@ -21,7 +20,7 @@ const getHTML = function getHTML(algebraTerm){
         // add the varibale symbol
         var variableHTML = document.createElement('div');
         variableHTML.classList.add("variable");
-        variableHTML.innerHTML = "x"
+        variableHTML.innerHTML = variable
         
         // add the power to the varible symbol
         var power = document.createElement('div');
@@ -39,21 +38,82 @@ const getHTML = function getHTML(algebraTerm){
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
-    termHTML.addEventListener('mouseup', function(){
-        AppManager.termSelect(algebraTerm)
-    })
+    termHTML.addEventListener('mouseup', function(){clickFunction(algebraTerm)})
 
     return termHTML
 }
 
+const getStatementHTML = function getStatementHTML(statement, clickFunction){
+
+    // create the statement container
+    var statementHTML = document.createElement('div');
+    statementHTML.classList.add("statement")
+    if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
+
+    // create the multiply term
+    if(statement.getMultiplyTerm().getFactor()!=1){ // only add an element for the multiply term if its non-1
+        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
+        multiplyTermHTML.classList.add("multiply-term")
+    }
+
+    // create the bracket - if its not the outside term
+    var bracketHTML = document.createElement('div')
+    if(statement.getName() != 'LHS') {
+        if(statement.getName() !='RHS'){
+            bracketHTML.classList.add("bracket")
+        }
+    }
+
+    // add in any sub statements
+    statement.getStatements().forEach( (subStatement)=>{
+        bracketHTML.appendChild(getStatementHTML(subStatement, clickFunction))
+    })
+
+    // create the inside Term HTML
+    statement.getTerms().forEach((term)=>{
+        bracketHTML.appendChild(getHTML(term, clickFunction))
+    })
+
+    // combine all of the HTML that we have
+    if(multiplyTermHTML){statementHTML.appendChild(multiplyTermHTML)}
+    statementHTML.appendChild(bracketHTML)
+
+    return statementHTML
+}
+
+const updateDisplay = function updateDisplay(statementArray, clickFunction){
+    LHSHtml = AlgebraObjectDisplay.getStatementHTML(statementArray[0], clickFunction)
+    RHSHtml = AlgebraObjectDisplay.getStatementHTML(statementArray[1], clickFunction)
+
+    document.querySelector('#LHS').appendChild(LHSHtml);
+    document.querySelector('#RHS').appendChild(RHSHtml);
+}
+
+const clearStatements = function clearStatements(){
+    
+    var LHS = document.querySelector('#LHS');
+    var RHS = document.querySelector('#RHS');
+    while(LHS.hasChildNodes()){
+        LHS.removeChild(LHS.lastChild)
+    }
+    while(RHS.hasChildNodes()){
+        RHS.removeChild(RHS.lastChild)
+    }
+}
+
 module.exports = {
-    getHTML:getHTML
+    getHTML:getHTML,
+    getStatementHTML,
+    updateDisplay: updateDisplay,
+    clearStatements: clearStatements
 }
 },{}],2:[function(require,module,exports){
 const AlgebraTerm = function AlgebraTerm(_arguments){
     var state = {
         factor: 1,
-        variables: {}
+        variables: {},
+        parent: {},
+        isSelected: false
     }
     const init = function init(termValues){
         state.factor = (termValues != undefined && termValues.factor != undefined) ? termValues.factor:  1;
@@ -72,7 +132,27 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         return state.factor
     }
     const getVariables = function getVariables(){
-        return Object.assign(state.variables)
+        return state.variables; 
+    }
+    const setParent = function addParent(statement){
+        state.parent = statement;
+    }
+    const getParent = function getParent(){
+        return state.parent
+    }
+    const clearParent = function clearParent(){
+        return state.parent = undefined;
+    }
+
+    const setSelected = function setSelected(selectSet){
+        if(selectSet == undefined){
+            state.isSelected != state.isSelected
+        }else if(selectSet == true){ state.isSelected = true
+        }else{ state.isSelected = false}
+    }
+
+    const isSelected = function isSelected(){
+        return state.isSelected
     }
     // make the state
     init(_arguments);
@@ -80,7 +160,142 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     return Object.assign(
         {getVariables: getVariables,
         getFactor: getFactor,
-        getState: getState}
+        getState: getState,
+        setParent: setParent,
+        getParent: getParent,
+        clearParent: clearParent,
+        setSelected: setSelected,
+        isSelected: isSelected}
+    )
+}
+
+const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // terms == array of terms (should this be an object?)
+    var statement = {
+        name: name,
+        terms : terms, // an arrayof terms
+        statements: [],
+        parent : parent, // for checking outside
+        multiTerm : AlgebraTerm({variable: 1}),
+        isSelected: false
+    };
+        
+    statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
+        term.setParent(statement)
+    })
+
+    const getMultiplyTerm = function getFactor(){
+        return statement.multiTerm;
+    }
+
+    const getParent = function getParent(){
+        return statement.parent
+    }
+
+    const setParent = function getParent(parentStatement){
+        return statement.parent = parentStatement
+    }
+    const clearParent = function clearParent(){
+        return statement.parent = undefined;
+    }
+
+    const setMultiplyTerm = function (multiplyTerm){
+        multiplyTerm.setParent(statement)
+        return statement.multiTerm = multiplyTerm;
+    }
+
+    const isMultiplyTerm = function isMultiplyTerm(checkTerm){
+        return statement.multiTerm == checkTerm;
+    }
+
+    const multiplyStatement = function(multiplyTerm){
+        statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
+        multiTerm.setParent(statement)
+        return statement.multiTerm
+    }
+
+    const includesTerm = function includesTerm(searchTerm){
+        return (statement.terms.includes(searchTerm)) ? statement.terms.includes(searchTerm) : statement.multiTerm == searchTerm
+    }
+
+    const addTerm = function addTerm(term){
+        term.setParent(statement)
+        return statement.terms.push(term)
+    }
+    const removeTerm = function removeTerm(term){
+        if(includesTerm(term)){
+            var index = terms.indexOf(term);
+            statement.terms[index].clearParent()
+            statement.terms.splice(index,1)
+            return statement.terms
+        }else{
+            return false;
+        }
+    }
+
+    const getTerms = function getTerms(){
+        return statement.terms
+    }
+
+    const getName = function getName(){
+        return statement.name;
+    }
+
+    const getStatements = function getStatements(){
+        return statement.statements;
+    }
+    const addStatement = function addStatement(addStatement){
+        addStatement.setParent(statement) // add the parent ref to the child
+        statement.statements.push(addStatement)
+    }
+    const removeStatement = function removeStatement(removeStatement){
+        if(statement.includesStatement(removeStatement)){
+            var index = statement.statements.indexOf(removeStatement);
+            statement.statements[index].clearParent();
+            return statement.statements.splice(index,1)
+        }else{
+            return false
+        }
+        
+    }
+    const includesStatement = function includesStatement(searchStatement){
+        return statement.statements.includes(searchStatement)
+    }
+    const isEmpty = function isEmpty(){
+        return statement.terms < 1
+    }
+
+    const setSelected = function setSelected(selectSet){
+        if(selectSet == undefined){
+            return statement.isSelected != statement.isSelected
+        }else if(selectSet == true){ return statement.isSelected = true
+        }else{ return statement.isSelected = false }
+    }
+
+    const isSelectedStatement = function isSelectedStatement(){
+        return statement.isSelected
+    }
+
+    return Object.assign(statement,
+        {getMultiplyTerm: getMultiplyTerm,
+         setMultiplyTerm: setMultiplyTerm,
+         multiplyStatement: multiplyStatement,
+         isMultiplyTerm: isMultiplyTerm,
+         addTerm: addTerm,
+         removeTerm: removeTerm,
+         includesTerm: includesTerm,
+         getTerms: getTerms,
+         getName: getName,
+         addStatement: addStatement,
+         removeStatement: removeStatement,
+         includesStatement: includesStatement,
+         getStatements: getStatements,
+         getParent: getParent,
+         setParent: setParent,
+         clearParent: clearParent,
+         isEmpty: isEmpty,
+         setSelected: setSelected,
+         isSelectedStatement: isSelectedStatement
+        }
     )
 }
 
@@ -167,33 +382,169 @@ const TermOperators = {
             }
         })
 
-        return AlgebraTerm({factor: newFactor, variables: newVariables})
+        return AlgebraTerm({factor: newFactor,
+                            variables: newVariables})
         
+    },
+    sameFactor: function sameFactor(term1, term2){
+        return term1.getFactor() == term2.getFactor()
+    },
+    sameVariables: function sameVariable(term1, term2){
+        var termVariables = Object.keys(term1.getVariables());
+        var match = true;
+
+        termVariables.forEach((variable)=>{
+            if(term2.getVariables()[variable] == undefined ){match = false; return false}// check the variable is there
+            if(term1.getVariables()[variable].power != term2.getVariables()[variable].power){match = false; return false}// check its power is the same
+        })
+
+        return match
     }
 
 }
 
 module.exports = {
     AlgebraTerm: AlgebraTerm,
+    AlgebraStatement: AlgebraStatement,
     TermOperators: TermOperators
 }
 },{}],3:[function(require,module,exports){
-const AppManager = function AppManager(){
+var Operations = require('./AlgebraObjects.js').TermOperators;
+var AlgebraStatement = require('./AlgebraObjects.js').AlgebraStatement;
+
+
+const AppManager = function AppManager(LHStatement, RHStatement){
     var state = {
-        operation: "add",
-        selectedTerm: undefined
+        selectedTerm: undefined,
+        statements: [
+            AlgebraStatement([], undefined, 'LHS'),
+            AlgebraStatement([], undefined, 'RHS'),
+        ]
     }
-    const termSelect = function termSelect(term){
-        if(!state.selectedTerm){
+    state.statements[0].addStatement(LHStatement)
+    state.statements[1].addStatement(RHStatement)
+
+    const termSelect = function termSelect(term){ // sets the term to be worked on 
+        if(state.selectedTerm == undefined || state.selectedTerm == term){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
-        }else{
-            console.log(AlgebraObjects.TermOperators.add(state.selectedTerm, term))
-            state.selectedTerm = undefined;
+            term.setSelected(true)
+            term.getParent().setSelected(true)
+            return "term set"
+        }else{ // do an operation
+            term.setSelected(false);
+            state.selectedTerm.setSelected(false);
+            state.selectedTerm.getParent().setSelected(false);
+            term.getParent().setSelected(false);
+
+            try{    // try to carry out the operation
+                return operateOnTerm(getSelectedTerm(), term)
+            }catch(err){    // catch anything that might happen
+                console.error(err)
+            }
         }
     }
-    
+
+
+    const operateOnTerm = function opertateOnTerm(term1, term2){
+        var operation = undefined
+        var result = undefined;
+
+        if(sameStatement(term1, term2)){ // if they are in the same statement
+            
+            var multiplyTerm = getMultiplyTerm(term1, term2) // this is not picking up multiply
+
+            if(multiplyTerm == undefined){ // -- ADD
+                operation = "add";
+                try{
+                    result = applyAddOperation(term1, term2)
+                    placeAddResult(result, term1)//TODO: implement these
+                    removeAddComponents(term1, term2)
+                }catch(e){
+                    if(/Terms cancelled each other/i.test(e.message)){
+                        removeAddComponents(term1, term2)
+                    }else{ // if its not the error we were looking for - throw it up the chain
+                        throw e
+                    }
+                }
+                
+            }else{  // -- MULTIPLY
+                operation = "multiply"
+                result = applyMultiplyOperation(term1, term2)
+                placeMultiplyResult(result, (multiplyTerm != term1) ? term1 : term2 ) // give the one that isn't the multiplyTerm
+                removeMultiplyComponents(multiplyTerm, (multiplyTerm != term1) ? term1 : term2 )
+            }
+
+        }else{
+            operation = "not same statement"
+        }
+
+        state.selectedTerm = undefined;
+        return {operation: operation , result: result}
+    }
+
+    const applyAddOperation = function applyAddOperation(term1, term2){
+        return Operations.add(term1, term2)
+    }
+    const placeAddResult = function placeAddResult(result, placementTerm){
+        var placeLocation = placementTerm.getParent()
+        placeLocation.addTerm(result);     // add the result to the statement
+        return true
+    }
+    const removeAddComponents = function removeAddComponents(term1, term2){
+        var parentStatement = term1.getParent();
+        parentStatement.removeTerm(term1);
+        parentStatement.removeTerm(term2);
+        return true
+    }
+
+    const applyMultiplyOperation = function applyMultiplyOperation(term1, term2){
+        return Operations.multiply(term1, term2)
+    }
+    const placeMultiplyResult = function placeMultiplyResult(multiResult, placementTerm){
+        var placeLocation = placementTerm.getParent().getParent()
+        placeLocation.addTerm(multiResult) // add the multiplication result outside the bracket
+        return true
+    }
+    const removeMultiplyComponents = function removeMultiplyComponents(multiplyTerm, term){ // TODO : work out the removal for nested statements
+        var nestedStatement = term.getParent()
+        nestedStatement.removeTerm(term)// remove the term we just multiplied
+        if(nestedStatement.isEmpty()){ nestedStatement.getParent().removeStatement(nestedStatement) } // remove the statement if its empty
+
+        return true
+    }
+
+    const getMultiplyTerm = function getMultiplyTerm(term1, term2){
+        var parentStatement = term1.getParent()
+
+        return (parentStatement.isMultiplyTerm(term1)) ? term1 :
+                    (parentStatement.isMultiplyTerm(term2) ? term2 : undefined)
+    }
+
+    const addStatement = function addStatement(statement){
+        state.statements.push(statement)
+    }
+
+    const sameStatement = function sameStatement(term1, term2){
+        return term1.getParent() == term2.getParent()
+    }
+    const getSelectedTerm = function getSelectedTerm(){
+        return state.selectedTerm
+    }
+
+    const getStatement = function getStatement(side){
+        return (side == 'LHS') ? state.statements[0] : state.statements[1]
+    }
+
+    const getStatements = function getStatements(){
+        return state.statements
+    }
+
     return Object.create(
-        { termSelect: termSelect
+        { termSelect: termSelect,
+            sameStatement:sameStatement,
+            getSelectedTerm: getSelectedTerm,
+            getStatement: getStatement,
+            getStatements: getStatements
         }
     )
 }
@@ -202,19 +553,38 @@ module.exports = {
     AppManager: AppManager
 }
 
-},{}],4:[function(require,module,exports){
+},{"./AlgebraObjects.js":2}],4:[function(require,module,exports){
 AlgebraObjects = require('./AlgebraObjects.js');
 AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
-AppManager = require('./AppManager.js').AppManager();
+AppManager = require('./AppManager.js').AppManager;
 
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
-var term2 = AlgebraObjects.AlgebraTerm({ factor: 2, variables:{x:{power:1}} } )
-var term3 = AlgebraObjects.AlgebraTerm({ factor: 6, variables:{x:{power:1}} } )
+var term2 = AlgebraObjects.AlgebraTerm({ factor: 2, variables:{y:{power:1}} } )
+var term3 = AlgebraObjects.AlgebraTerm({ factor: 6, variables:{y:{power:1}} } )
 
-//add the html to the document
-document.body.appendChild(AlgebraObjectDisplay.getHTML(term1))
-document.body.appendChild(AlgebraObjectDisplay.getHTML(term2))
-document.body.appendChild(AlgebraObjectDisplay.getHTML(term3))
+// create the initial statements
+var LHS  = AlgebraObjects.AlgebraStatement([term1], undefined, "LHS")
+var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
+
+// create the AppManager
+var appManager = AppManager(LHS, RHS)
+
+var clickFunction = function(term){
+    appManager.termSelect(term);
+    AlgebraObjectDisplay.clearStatements();
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+}
+
+// display the inital state
+window.onload = function(){
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+}
+
+
+
+
+
+
 
 },{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3}]},{},[4]);

@@ -2,7 +2,8 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     var state = {
         factor: 1,
         variables: {},
-        parent: {}
+        parent: {},
+        isSelected: false
     }
     const init = function init(termValues){
         state.factor = (termValues != undefined && termValues.factor != undefined) ? termValues.factor:  1;
@@ -32,6 +33,17 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     const clearParent = function clearParent(){
         return state.parent = undefined;
     }
+
+    const setSelected = function setSelected(selectSet){
+        if(selectSet == undefined){
+            state.isSelected != state.isSelected
+        }else if(selectSet == true){ state.isSelected = true
+        }else{ state.isSelected = false}
+    }
+
+    const isSelected = function isSelected(){
+        return state.isSelected
+    }
     // make the state
     init(_arguments);
 
@@ -41,7 +53,9 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         getState: getState,
         setParent: setParent,
         getParent: getParent,
-        clearParent: clearParent}
+        clearParent: clearParent,
+        setSelected: setSelected,
+        isSelected: isSelected}
     )
 }
 
@@ -51,7 +65,8 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1})
+        multiTerm : AlgebraTerm({variable: 1}),
+        isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
@@ -93,6 +108,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     }
 
     const addTerm = function addTerm(term){
+        term.setParent(statement)
         return statement.terms.push(term)
     }
     const removeTerm = function removeTerm(term){
@@ -106,6 +122,10 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         }
     }
 
+    const getTerms = function getTerms(){
+        return statement.terms
+    }
+
     const getName = function getName(){
         return statement.name;
     }
@@ -113,7 +133,7 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     const getStatements = function getStatements(){
         return statement.statements;
     }
-    const addStatement = function setStatement(addStatement){
+    const addStatement = function addStatement(addStatement){
         addStatement.setParent(statement) // add the parent ref to the child
         statement.statements.push(addStatement)
     }
@@ -134,6 +154,17 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         return statement.terms < 1
     }
 
+    const setSelected = function setSelected(selectSet){
+        if(selectSet == undefined){
+            return statement.isSelected != statement.isSelected
+        }else if(selectSet == true){ return statement.isSelected = true
+        }else{ return statement.isSelected = false }
+    }
+
+    const isSelectedStatement = function isSelectedStatement(){
+        return statement.isSelected
+    }
+
     return Object.assign(statement,
         {getMultiplyTerm: getMultiplyTerm,
          setMultiplyTerm: setMultiplyTerm,
@@ -142,14 +173,18 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
          addTerm: addTerm,
          removeTerm: removeTerm,
          includesTerm: includesTerm,
+         getTerms: getTerms,
          getName: getName,
          addStatement: addStatement,
          removeStatement: removeStatement,
          includesStatement: includesStatement,
+         getStatements: getStatements,
          getParent: getParent,
          setParent: setParent,
          clearParent: clearParent,
-         isEmpty: isEmpty
+         isEmpty: isEmpty,
+         setSelected: setSelected,
+         isSelectedStatement: isSelectedStatement
         }
     )
 }
