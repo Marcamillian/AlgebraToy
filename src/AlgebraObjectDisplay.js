@@ -57,10 +57,8 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
 
     // create the bracket - if its not the outside term
     var bracketHTML = document.createElement('div')
-    if(statement.getName() != 'LHS') {
-        if(statement.getName() !='RHS'){
-            bracketHTML.classList.add("bracket")
-        }
+    if(statement.getParent()) {    // if the statement has a parent
+            bracketHTML.classList.add("bracket")    // display brackets
     }
 
     // add in any sub statements

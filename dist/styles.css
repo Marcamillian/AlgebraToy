@@ -39,6 +39,10 @@ html{
     background-color:green;
 }
 
+statement.selected .statement{
+    background-color: green;
+}
+
 button.addTerm{
     display: block;
 }
