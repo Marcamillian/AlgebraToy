@@ -39,8 +39,9 @@ html{
     background-color:green;
 }
 
-statement.selected .statement{
-    background-color: green;
+.statement.selected .statement,
+.statement.selected .statement .algebra-term{
+    background-color: blue;
 }
 
 button.addTerm{
