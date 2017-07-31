@@ -95,7 +95,6 @@ test.skip("Altering the state object directly after return", function(t){ // TOD
 
     // check that we didn't alter the original
     postChangeVars = testTerm.getVariables()
-    console.log(postChangeVars)
     t.equal(testTerm.getState().factor, 0, "Check the post change factor") // THIS IS BROKEN! 
     t.equal(Object.keys(postChangeVars).length, 1, "Check the original variable")
     
@@ -127,7 +126,6 @@ test("Altering an exisiting term", (t)=>{
     // add another variable
     testTerm.addVariable('y', 5);
     postChangeVars = testTerm.getVariables()
-    console.log(Object.keys(postChangeVars).length)
     t.equal( Object.keys(postChangeVars).length , 2, " both x and y vars");
     t.ok(postChangeVars['x'], "There is an x variable");
     t.equal(postChangeVars['x'].power, 2, "Power of x is 2")
