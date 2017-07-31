@@ -65,13 +65,14 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1}),
+        multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
         isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.setParent(statement)
     })
+    statement.multiTerm.setParent(statement) // and the multiplyTerm
 
     const getMultiplyTerm = function getFactor(){
         return statement.multiTerm;

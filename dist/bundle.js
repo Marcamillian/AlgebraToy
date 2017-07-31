@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-const getHTML = function getHTML(algebraTerm, clickFunction){
+const getHTML = function getHTML(algebraTerm, clickFunction, unitFactor){
 
     //add the contianer
     var termHTML = document.createElement('div');
@@ -34,7 +34,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
     
 
     // assemble all of the components
-    if(algebraTerm.getFactor() != 1){termHTML.appendChild(factor);}
+    if(algebraTerm.getFactor() != 1 || unitFactor){termHTML.appendChild(factor);}
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
@@ -51,8 +51,8 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
     // create the multiply term
-    if(statement.getMultiplyTerm().getFactor()!=1){ // only add an element for the multiply term if its non-1
-        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
+    if(statement.getParent()){ // only add an element for the multiply term if its non-1
+        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction, true);
         multiplyTermHTML.classList.add("multiply-term")
     }
 
@@ -175,13 +175,14 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1}),
+        multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
         isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.setParent(statement)
     })
+    statement.multiTerm.setParent(statement) // and the multiplyTerm
 
     const getMultiplyTerm = function getFactor(){
         return statement.multiTerm;

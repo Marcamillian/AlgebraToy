@@ -1,4 +1,4 @@
-const getHTML = function getHTML(algebraTerm, clickFunction){
+const getHTML = function getHTML(algebraTerm, clickFunction, unitFactor){
 
     //add the contianer
     var termHTML = document.createElement('div');
@@ -33,7 +33,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
     
 
     // assemble all of the components
-    if(algebraTerm.getFactor() != 1){termHTML.appendChild(factor);}
+    if(algebraTerm.getFactor() != 1 || unitFactor){termHTML.appendChild(factor);}
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
@@ -50,8 +50,8 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
     // create the multiply term
-    if(statement.getMultiplyTerm().getFactor()!=1){ // only add an element for the multiply term if its non-1
-        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
+    if(statement.getParent()){ // only add an element for the multiply term if its non-1
+        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction, true);
         multiplyTermHTML.classList.add("multiply-term")
     }
 
