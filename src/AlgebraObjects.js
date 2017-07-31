@@ -41,6 +41,18 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         }else{ state.isSelected = false}
     }
 
+    const setFactor = function setFactor(factor){
+        state.factor = factor;
+    }
+
+    const addVariable = function addVariable(variable, power){
+        state.variables[variable] = {'power': power}
+    }
+
+    const removeVariable = function removeVariable(variable){
+        delete state.variables[variable]
+    }
+
     const isSelected = function isSelected(){
         return state.isSelected
     }
@@ -55,7 +67,11 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         getParent: getParent,
         clearParent: clearParent,
         setSelected: setSelected,
-        isSelected: isSelected}
+        isSelected: isSelected,
+        setFactor: setFactor,
+        addVariable: addVariable,
+        removeVariable: removeVariable
+        }
     )
 }
 
