@@ -41,6 +41,18 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         }else{ state.isSelected = false}
     }
 
+    const setFactor = function setFactor(factor){
+        state.factor = factor;
+    }
+
+    const addVariable = function addVariable(variable, power){
+        state.variables[variable] = {'power': power}
+    }
+
+    const removeVariable = function removeVariable(variable){
+        delete state.variables[variable]
+    }
+
     const isSelected = function isSelected(){
         return state.isSelected
     }
@@ -55,7 +67,11 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         getParent: getParent,
         clearParent: clearParent,
         setSelected: setSelected,
-        isSelected: isSelected}
+        isSelected: isSelected,
+        setFactor: setFactor,
+        addVariable: addVariable,
+        removeVariable: removeVariable
+        }
     )
 }
 
@@ -65,13 +81,14 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1}),
+        multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
         isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.setParent(statement)
     })
+    statement.multiTerm.setParent(statement) // and the multiplyTerm
 
     const getMultiplyTerm = function getFactor(){
         return statement.multiTerm;
@@ -289,6 +306,20 @@ const TermOperators = {
         })
 
         return match
+    },
+    compareTerms: function compareTerms(term1, term2){
+       return this.sameFactor(term1, term2) && this.sameVariables(term1, term2)
+    },
+    duplicateTerm: function duplicateTerm(term){
+        let dupFactor = term.getFactor();
+        let origVariables = term.getVariables();
+        let dupVariables = {}
+
+        Object.keys(origVariables).forEach((variable)=>{
+            dupVariables[variable] = {power: origVariables[variable].power}
+        })
+
+        return AlgebraTerm({factor: dupFactor, variables: dupVariables})
     }
 
 }

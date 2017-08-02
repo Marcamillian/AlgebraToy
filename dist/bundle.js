@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-const getHTML = function getHTML(algebraTerm, clickFunction){
+const getHTML = function getHTML(algebraTerm, clickFunction, unitFactor){
 
     //add the contianer
     var termHTML = document.createElement('div');
@@ -34,7 +34,7 @@ const getHTML = function getHTML(algebraTerm, clickFunction){
     
 
     // assemble all of the components
-    if(algebraTerm.getFactor() != 1){termHTML.appendChild(factor);}
+    if(algebraTerm.getFactor() != 1 || unitFactor){termHTML.appendChild(factor);}
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
@@ -51,17 +51,15 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
     // create the multiply term
-    if(statement.getMultiplyTerm().getFactor()!=1){ // only add an element for the multiply term if its non-1
-        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction);
+    if(statement.getParent()){ // only add an element for the multiply term if its non-1
+        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction, true);
         multiplyTermHTML.classList.add("multiply-term")
     }
 
     // create the bracket - if its not the outside term
     var bracketHTML = document.createElement('div')
-    if(statement.getName() != 'LHS') {
-        if(statement.getName() !='RHS'){
-            bracketHTML.classList.add("bracket")
-        }
+    if(statement.getParent()) {    // if the statement has a parent
+            bracketHTML.classList.add("bracket")    // display brackets
     }
 
     // add in any sub statements
@@ -151,6 +149,18 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         }else{ state.isSelected = false}
     }
 
+    const setFactor = function setFactor(factor){
+        state.factor = factor;
+    }
+
+    const addVariable = function addVariable(variable, power){
+        state.variables[variable] = {'power': power}
+    }
+
+    const removeVariable = function removeVariable(variable){
+        delete state.variables[variable]
+    }
+
     const isSelected = function isSelected(){
         return state.isSelected
     }
@@ -165,7 +175,11 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         getParent: getParent,
         clearParent: clearParent,
         setSelected: setSelected,
-        isSelected: isSelected}
+        isSelected: isSelected,
+        setFactor: setFactor,
+        addVariable: addVariable,
+        removeVariable: removeVariable
+        }
     )
 }
 
@@ -175,13 +189,14 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1}),
+        multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
         isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.setParent(statement)
     })
+    statement.multiTerm.setParent(statement) // and the multiplyTerm
 
     const getMultiplyTerm = function getFactor(){
         return statement.multiTerm;
@@ -399,6 +414,20 @@ const TermOperators = {
         })
 
         return match
+    },
+    compareTerms: function compareTerms(term1, term2){
+       return this.sameFactor(term1, term2) && this.sameVariables(term1, term2)
+    },
+    duplicateTerm: function duplicateTerm(term){
+        let dupFactor = term.getFactor();
+        let origVariables = term.getVariables();
+        let dupVariables = {}
+
+        Object.keys(origVariables).forEach((variable)=>{
+            dupVariables[variable] = {power: origVariables[variable].power}
+        })
+
+        return AlgebraTerm({factor: dupFactor, variables: dupVariables})
     }
 
 }
@@ -539,12 +568,20 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         return state.statements
     }
 
+    const introduceTerm = function itroduceTerm(term){
+        state.statements.forEach((statement)=>{
+            let termCopy = Operations.duplicateTerm(term);
+            statement.addTerm(termCopy)
+        })
+    }
+
     return Object.create(
         { termSelect: termSelect,
             sameStatement:sameStatement,
             getSelectedTerm: getSelectedTerm,
             getStatement: getStatement,
-            getStatements: getStatements
+            getStatements: getStatements,
+            introduceTerm: introduceTerm
         }
     )
 }
@@ -557,6 +594,7 @@ module.exports = {
 AlgebraObjects = require('./AlgebraObjects.js');
 AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
+TermCreator = require('./TermCreator.js')
 
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
@@ -570,15 +608,52 @@ var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
 // create the AppManager
 var appManager = AppManager(LHS, RHS)
 
-var clickFunction = function(term){
-    appManager.termSelect(term);
+// make the term creator
+var termCreator = TermCreator();
+
+var updateDisplay = function updateDisplay(){
     AlgebraObjectDisplay.clearStatements();
-    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
+}
+
+var termClickFunction = function(term){
+    appManager.termSelect(term);
+    updateDisplay()
+}
+
+var updateTermCreatorDisplay = function(){
+    let term = termCreator.getTerm()
+    let element = document.querySelector('#created-term');
+    while(element.hasChildNodes()){
+        element.removeChild(element.lastChild)
+    }
+    element.appendChild(AlgebraObjectDisplay.getHTML(term, ()=>{})); // add the new child
 }
 
 // display the inital state
 window.onload = function(){
-    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), clickFunction)
+    AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
+
+    // add in the function to add the terms
+    document.querySelector('.addTerm').addEventListener('click',()=>{
+        let term = termCreator.getTerm()
+        appManager.introduceTerm(term)
+        updateDisplay()
+    })
+
+    termCreator.setFactor(3)
+    // update the termCreator
+
+    updateTermCreatorDisplay()
+
+    // add the control listeners
+    document.querySelector('#factor-up').addEventListener('click',()=>{termCreator.increaseFactor(); updateTermCreatorDisplay()})
+    document.querySelector('#factor-down').addEventListener('click',()=>{ termCreator.decreaseFactor(); updateTermCreatorDisplay() })
+    document.querySelector('#next-var').addEventListener('click',()=>{ termCreator.nextVariable(); updateTermCreatorDisplay() })
+    document.querySelector('#power-up').addEventListener('click',()=>{ termCreator.increasePower(); updateTermCreatorDisplay() })
+    document.querySelector('#power-down').addEventListener('click',()=>{ termCreator.decreasePower(); updateTermCreatorDisplay() })
+
+
 }
 
 
@@ -587,4 +662,89 @@ window.onload = function(){
 
 
 
-},{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3}]},{},[4]);
+},{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3,"./TermCreator.js":5}],5:[function(require,module,exports){
+var AlgebraTerm = require('./AlgebraObjects.js').AlgebraTerm;
+var duplicateTerm = require('./AlgebraObjects.js').TermOperators.duplicateTerm;
+
+const TermCreator = function TermCreator(){
+    var state = {
+        createdTerm: AlgebraTerm()
+    }
+    const variables = ['x','y','z']
+
+    const setFactor = function setFactor(factor){
+        state.createdTerm.setFactor(factor)
+    }
+    
+    const setVariable = function setVariable(variable, power){
+        state.createdTerm.addVariable(variable, power)
+    }
+
+    const getTerm = function getTerm(){
+        return duplicateTerm(state.createdTerm)
+    }
+
+    const increaseFactor = function increaseFactor(){
+        let newFactor = state.createdTerm.getFactor() + 1;
+        state.createdTerm.setFactor(newFactor)
+    }
+
+    const decreaseFactor = function decreaseFactor(){
+        let newFactor = state.createdTerm.getFactor() - 1;
+        state.createdTerm.setFactor(newFactor)
+    }
+
+    const nextVariable = function toggleVariable(){
+        let currentVars = state.createdTerm.getVariables();
+        let varKeys = Object.keys(currentVars)
+        if(varKeys.length){ // if there is a variable
+            let nextVarIndex = variables.indexOf(varKeys[0]) +1; // get the index of the next variable
+            state.createdTerm.removeVariable(varKeys[0]); // remove the last variable
+            if(nextVarIndex < variables.length){    // if there are still variables to assign
+                state.createdTerm.addVariable(variables[nextVarIndex],1)    // assign new variable
+            }
+        }else{  // if there is no current variable
+            state.createdTerm.addVariable(variables[0],1) // set to the first variable
+        }
+    }
+
+    const increasePower = function increasePower(){
+        let variables = state.createdTerm.getVariables()
+        let variableKeys = Object.keys(variables)
+        
+        if(variableKeys.length == 0){ // no power to add
+            throw new Error("no power to change")
+        }else{
+            let currentPower = variables[variableKeys[0]].power
+            state.createdTerm.addVariable(variableKeys[0], currentPower+1)
+        }
+
+    }
+
+    const decreasePower = function decreasePower(){
+        let variables = state.createdTerm.getVariables()
+        let variableKeys = Object.keys(variables)
+
+        if(variableKeys.length == 0){ // no power to add
+            throw new Error("no power to change")
+        }else{
+            let currentPower = variables[variableKeys[0]].power
+            state.createdTerm.addVariable(variableKeys[0], currentPower-1)
+        }
+    }
+
+    return {
+        setFactor: setFactor,
+        setVariable: setVariable,
+        getTerm: getTerm,
+        increaseFactor: increaseFactor,
+        decreaseFactor: decreaseFactor,
+        nextVariable: nextVariable,
+        increasePower: increasePower,
+        decreasePower: decreasePower
+    }
+    
+}
+
+module.exports = TermCreator
+},{"./AlgebraObjects.js":2}]},{},[4]);
