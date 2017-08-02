@@ -45,14 +45,27 @@ const TermCreator = function TermCreator(){
 
     const increasePower = function increasePower(){
         let variables = state.createdTerm.getVariables()
+        let variableKeys = Object.keys(variables)
         
-        // if there is a variable
-        // if there is not a variable
+        if(variableKeys.length == 0){ // no power to add
+            throw new Error("no power to change")
+        }else{
+            let currentPower = variables[variableKeys[0]].power
+            state.createdTerm.addVariable(variableKeys[0], currentPower+1)
+        }
 
     }
 
     const decreasePower = function decreasePower(){
-        
+        let variables = state.createdTerm.getVariables()
+        let variableKeys = Object.keys(variables)
+
+        if(variableKeys.length == 0){ // no power to add
+            throw new Error("no power to change")
+        }else{
+            let currentPower = variables[variableKeys[0]].power
+            state.createdTerm.addVariable(variableKeys[0], currentPower-1)
+        }
     }
 
     return {
@@ -61,7 +74,9 @@ const TermCreator = function TermCreator(){
         getTerm: getTerm,
         increaseFactor: increaseFactor,
         decreaseFactor: decreaseFactor,
-        nextVariable: nextVariable
+        nextVariable: nextVariable,
+        increasePower: increasePower,
+        decreasePower: decreasePower
     }
     
 }

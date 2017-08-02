@@ -68,7 +68,24 @@ test("Testing Increase and decrease", (t)=>{
     thisTermVars = termCreator.getTerm().getVariables();
     t.equals(Object.keys(thisTermVars).length, 0, "Rolled round - all variables removed")
 
+    termCreator.nextVariable();
+    termCreator.increasePower();
+    thisTermVars = termCreator.getTerm().getVariables();
+    t.equals(Object.keys(thisTermVars).length, 1, "Only 1 variable")
+    let thisVar = Object.keys(thisTermVars)[0];
+    t.equals(thisTermVars[thisVar].power, 2 , "Power is increased to 2")
 
+    termCreator.increasePower();
+    thisTermVars = termCreator.getTerm().getVariables();
+    t.equals(Object.keys(thisTermVars).length, 1, "Only 1 variable")
+    thisVar = Object.keys(thisTermVars)[0];
+    t.equals(thisTermVars[thisVar].power, 3 , "Power is increased to 3")
+
+    termCreator.decreasePower();
+    thisTermVars = termCreator.getTerm().getVariables();
+    t.equals(Object.keys(thisTermVars).length, 1, "Only 1 variable")
+    thisVar = Object.keys(thisTermVars)[0];
+    t.equals(thisTermVars[thisVar].power, 2 , "Power is decreased to 2")
 
     t.end()
     
