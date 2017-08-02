@@ -149,6 +149,18 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         }else{ state.isSelected = false}
     }
 
+    const setFactor = function setFactor(factor){
+        state.factor = factor;
+    }
+
+    const addVariable = function addVariable(variable, power){
+        state.variables[variable] = {'power': power}
+    }
+
+    const removeVariable = function removeVariable(variable){
+        delete state.variables[variable]
+    }
+
     const isSelected = function isSelected(){
         return state.isSelected
     }
@@ -163,7 +175,11 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         getParent: getParent,
         clearParent: clearParent,
         setSelected: setSelected,
-        isSelected: isSelected}
+        isSelected: isSelected,
+        setFactor: setFactor,
+        addVariable: addVariable,
+        removeVariable: removeVariable
+        }
     )
 }
 
@@ -578,6 +594,7 @@ module.exports = {
 AlgebraObjects = require('./AlgebraObjects.js');
 AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
+TermCreator = require('./TermCreator.js')
 
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
@@ -591,6 +608,9 @@ var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
 // create the AppManager
 var appManager = AppManager(LHS, RHS)
 
+// make the term creator
+var termCreator = TermCreator();
+
 var updateDisplay = function updateDisplay(){
     AlgebraObjectDisplay.clearStatements();
     AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
@@ -599,6 +619,11 @@ var updateDisplay = function updateDisplay(){
 var termClickFunction = function(term){
     appManager.termSelect(term);
     updateDisplay()
+}
+
+var updateTermCreatorDisplay = function(){
+    let term = termCreator.getTerm()
+    document.querySelector('#created-term').appendChild(AlgebraObjectDisplay.getHTML(term));
 }
 
 // display the inital state
@@ -611,6 +636,10 @@ window.onload = function(){
         appManager.introduceTerm(term)
         updateDisplay()
     })
+
+    termCreator.setFactor(3)
+    // update the termCreator
+    updateTermCreatorDisplay()
 }
 
 
@@ -619,4 +648,34 @@ window.onload = function(){
 
 
 
-},{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3}]},{},[4]);
+},{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3,"./TermCreator.js":5}],5:[function(require,module,exports){
+var AlgebraTerm = require('./AlgebraObjects.js').AlgebraTerm;
+var duplicateTerm = require('./AlgebraObjects.js').TermOperators.duplicateTerm;
+
+const TermCreator = function TermCreator(){
+    var state = {
+        createdTerm: AlgebraTerm()
+    }
+
+    const setFactor = function setFactor(factor){
+        state.createdTerm.setFactor(factor)
+    }
+    
+    const setVariable = function setVariable(variable, power){
+        state.createdTerm.addVariable(variable, power)
+    }
+
+    const getTerm = function getTerm(){
+        return duplicateTerm(state.createdTerm)
+    }
+
+    return {
+        setFactor: setFactor,
+        setVariable: setVariable,
+        getTerm: getTerm
+    }
+    
+}
+
+module.exports = TermCreator
+},{"./AlgebraObjects.js":2}]},{},[4]);
