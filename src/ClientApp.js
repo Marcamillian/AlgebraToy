@@ -3,6 +3,8 @@ AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
 TermCreator = require('./TermCreator.js')
 
+
+// TODO :: pull the equations from somewhere so that you can swap them in and out
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
 var term2 = AlgebraObjects.AlgebraTerm({ factor: 2, variables:{y:{power:1}} } )
