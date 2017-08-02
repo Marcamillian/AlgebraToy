@@ -48,3 +48,7 @@ html{
 button.addTerm{
     display: block;
 }
+
+#created-term *{
+    display:inline-block
+}

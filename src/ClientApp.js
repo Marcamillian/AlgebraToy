@@ -30,7 +30,11 @@ var termClickFunction = function(term){
 
 var updateTermCreatorDisplay = function(){
     let term = termCreator.getTerm()
-    document.querySelector('#created-term').appendChild(AlgebraObjectDisplay.getHTML(term));
+    let element = document.querySelector('#created-term');
+    while(element.hasChildNodes()){
+        element.removeChild(element.lastChild)
+    }
+    element.appendChild(AlgebraObjectDisplay.getHTML(term, ()=>{})); // add the new child
 }
 
 // display the inital state
@@ -39,14 +43,24 @@ window.onload = function(){
 
     // add in the function to add the terms
     document.querySelector('.addTerm').addEventListener('click',()=>{
-        let term = AlgebraObjects.AlgebraTerm({factor: 5, variables:{x:{power:1}} })
+        let term = termCreator.getTerm()
         appManager.introduceTerm(term)
         updateDisplay()
     })
 
     termCreator.setFactor(3)
     // update the termCreator
+
     updateTermCreatorDisplay()
+
+    // add the control listeners
+    document.querySelector('#factor-up').addEventListener('click',()=>{termCreator.increaseFactor(); updateTermCreatorDisplay()})
+    document.querySelector('#factor-down').addEventListener('click',()=>{ termCreator.decreaseFactor(); updateTermCreatorDisplay() })
+    document.querySelector('#next-var').addEventListener('click',()=>{ termCreator.nextVariable(); updateTermCreatorDisplay() })
+    document.querySelector('#power-up').addEventListener('click',()=>{ termCreator.increasePower(); updateTermCreatorDisplay() })
+    document.querySelector('#power-down').addEventListener('click',()=>{ termCreator.decreasePower(); updateTermCreatorDisplay() })
+
+
 }
 
 
