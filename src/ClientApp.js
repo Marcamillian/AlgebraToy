@@ -2,20 +2,24 @@ AlgebraObjects = require('./AlgebraObjects.js');
 AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
 TermCreator = require('./TermCreator.js')
+EquationLoader = require('./EquationLoader.js')
 
 // TODO: import the terms for LSH and RHS from some kind of data store
+var equationLoader = EquationLoader()
 
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
 var term2 = AlgebraObjects.AlgebraTerm({ factor: 2, variables:{y:{power:1}} } )
 var term3 = AlgebraObjects.AlgebraTerm({ factor: 6, variables:{y:{power:1}} } )
 
+var startEquation = equationLoader.getNextEquation();
+
 // create the initial statements
-var LHS  = AlgebraObjects.AlgebraStatement([term1], undefined, "LHS")
-var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
+var LHS  = AlgebraObjects.AlgebraStatement([term1], undefined)
+var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined)
 
 // create the AppManager
-var appManager = AppManager(LHS, RHS)
+var appManager = AppManager(startEquation.LHS, startEquation.RHS)
 
 // make the term creator
 var termCreator = TermCreator();

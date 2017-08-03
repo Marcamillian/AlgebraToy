@@ -7,18 +7,27 @@ const EquationLoader = function EquationLoader(){
     
     let currentIndex = Object.keys(equationData).length;
 
+    const getNextEquationJSON = function getNextEquationJSON(){
+        let keys = Object.keys(equationData)
+        currentIndex = (currentIndex+1 < keys.length) ? currentIndex+1 : 0 // increase the index
+        var equationKey = keys[currentIndex];
+        
+        return equationData[equationKey]
+    }
+
     const getNextEquation = function getNextEquation(){
         let keys = Object.keys(equationData)
         currentIndex = (currentIndex+1 < keys.length) ? currentIndex+1 : 0 // increase the index
         var equationKey = keys[currentIndex];
-        return equationData[equationKey]
+        
+        return JSONtoObjects(equationData[equationKey])
     }
 
     const JSONtoObjects = function JSONtoObjects(equationJSON){
-        let LHStatement = equationJSON.LHS;
-        let RHStatement = equationJSON.RHS;
-
-        
+        return {
+            LHS: JSONtoStatement(equationJSON.LHS),
+            RHS: JSONtoStatement(equationJSON.RHS)
+        }
     }
 
     const JSONtoStatement = function JSONtoStatement(statementJSON){
@@ -44,6 +53,7 @@ const EquationLoader = function EquationLoader(){
     }
     
     return {
+        getNextEquationJSON: getNextEquationJSON,
         getNextEquation: getNextEquation,
         JSONtoStatement: JSONtoStatement
     }

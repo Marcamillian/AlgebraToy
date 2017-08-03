@@ -595,18 +595,24 @@ AlgebraObjects = require('./AlgebraObjects.js');
 AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
 TermCreator = require('./TermCreator.js')
+EquationLoader = require('./EquationLoader.js')
+
+// TODO: import the terms for LSH and RHS from some kind of data store
+var equationLoader = EquationLoader()
 
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
 var term2 = AlgebraObjects.AlgebraTerm({ factor: 2, variables:{y:{power:1}} } )
 var term3 = AlgebraObjects.AlgebraTerm({ factor: 6, variables:{y:{power:1}} } )
 
+var startEquation = equationLoader.getNextEquation();
+
 // create the initial statements
-var LHS  = AlgebraObjects.AlgebraStatement([term1], undefined, "LHS")
-var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
+var LHS  = AlgebraObjects.AlgebraStatement([term1], undefined)
+var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined)
 
 // create the AppManager
-var appManager = AppManager(LHS, RHS)
+var appManager = AppManager(startEquation.LHS, startEquation.RHS)
 
 // make the term creator
 var termCreator = TermCreator();
@@ -662,7 +668,123 @@ window.onload = function(){
 
 
 
-},{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3,"./TermCreator.js":5}],5:[function(require,module,exports){
+},{"./AlgebraObjectDisplay.js":1,"./AlgebraObjects.js":2,"./AppManager.js":3,"./EquationLoader.js":5,"./TermCreator.js":7}],5:[function(require,module,exports){
+// something to load JSON file
+var equationData = require('./EquationSetups.json')
+var AlgebraTerm = require('./AlgebraObjects.js').AlgebraTerm;
+var AlgebraStatement = require('./AlgebraObjects.js').AlgebraStatement;
+
+const EquationLoader = function EquationLoader(){
+    
+    let currentIndex = Object.keys(equationData).length;
+
+    const getNextEquationJSON = function getNextEquationJSON(){
+        let keys = Object.keys(equationData)
+        currentIndex = (currentIndex+1 < keys.length) ? currentIndex+1 : 0 // increase the index
+        var equationKey = keys[currentIndex];
+        
+        return equationData[equationKey]
+    }
+
+    const getNextEquation = function getNextEquation(){
+        let keys = Object.keys(equationData)
+        currentIndex = (currentIndex+1 < keys.length) ? currentIndex+1 : 0 // increase the index
+        var equationKey = keys[currentIndex];
+        
+        return JSONtoObjects(equationData[equationKey])
+    }
+
+    const JSONtoObjects = function JSONtoObjects(equationJSON){
+        return {
+            LHS: JSONtoStatement(equationJSON.LHS),
+            RHS: JSONtoStatement(equationJSON.RHS)
+        }
+    }
+
+    const JSONtoStatement = function JSONtoStatement(statementJSON){
+        // statement has terms
+        let termObjects = statementJSON.terms.map((termJSON)=>{
+            return JSONtoTerm(termJSON)
+        })
+        
+        // create the core statement
+        let statement = AlgebraStatement(termObjects, undefined, undefined)
+        if(statementJSON.multiplyFactor) statement.setMultiplyTerm(statementJSON.multiplyFactor)
+        
+        // add on the childStatements
+        statementJSON.statements.forEach((subStatement)=>{
+            statement.addStatement(JSONtoStatement(subStatement))
+        })
+        
+        return statement
+    }
+
+    const JSONtoTerm = function JSONtoTerm(termJSON){
+        return AlgebraTerm({factor: termJSON.factor, variables: termJSON.variables})
+    }
+    
+    return {
+        getNextEquationJSON: getNextEquationJSON,
+        getNextEquation: getNextEquation,
+        JSONtoStatement: JSONtoStatement
+    }
+}
+
+module.exports = EquationLoader
+
+
+},{"./AlgebraObjects.js":2,"./EquationSetups.json":6}],6:[function(require,module,exports){
+module.exports={
+    "1":{
+        "LHS":{
+            "terms": [
+                {"factor": 1, "variables":{ "x":{"power":1} } },
+                {"factor": -2, "variables":{ "y":{"power":1} } }
+            ],
+            "statements":[
+                {   "mutliplyFactor":5,
+                    "terms":[
+                        {"factor": 1, "variables":{ "x":{"power":1} } }
+                    ],
+                    "statements":[]
+                }
+            ]
+        },
+        "RHS":{
+            "terms":[
+                {"factor": 2, "variables":{ "y":{"power":1} } }
+            ],
+            "statements":[
+                
+            ]
+        }
+    },
+    "2":{
+        "LHS":{
+            "terms": [
+                {"factor": 1, "variables":{ "z":{"power":1} } },
+                {"factor": -2, "variables":{ "z":{"power":1} } }
+            ],
+            "statements":[
+                {   "mutliplyFactor":5,
+                    "terms":[
+                        {"factor": 1, "variables":{ "y":{"power":1} } }
+                    ],
+                    "statements":[]
+                }
+            ]
+        },
+        "RHS":{
+            "terms":[
+                {"factor": 2, "variables":{ "y":{"power":1} } }
+            ],
+            "statements":[
+                
+            ]
+        }
+    }
+}
+},{}],7:[function(require,module,exports){
 var AlgebraTerm = require('./AlgebraObjects.js').AlgebraTerm;
 var duplicateTerm = require('./AlgebraObjects.js').TermOperators.duplicateTerm;
 
