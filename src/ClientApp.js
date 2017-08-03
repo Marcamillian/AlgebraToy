@@ -2,34 +2,34 @@ AlgebraObjects = require('./AlgebraObjects.js');
 AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
 TermCreator = require('./TermCreator.js')
+EquationLoader = require('./EquationLoader.js')
 
+// TODO: import the terms for LSH and RHS from some kind of data store
+var equationLoader = EquationLoader()
 
-// TODO :: pull the equations from somewhere so that you can swap them in and out
-// create a term
-var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
-var term2 = AlgebraObjects.AlgebraTerm({ factor: 2, variables:{y:{power:1}} } )
-var term3 = AlgebraObjects.AlgebraTerm({ factor: 6, variables:{y:{power:1}} } )
-
-// create the initial statements
-var LHS  = AlgebraObjects.AlgebraStatement([term1], undefined, "LHS")
-var RHS = AlgebraObjects.AlgebraStatement([term2, term3], undefined, "RHS")
+// load in the equation from the loader
+var startEquation = equationLoader.getNextEquation();
 
 // create the AppManager
-var appManager = AppManager(LHS, RHS)
+var appManager = AppManager(startEquation.LHS, startEquation.RHS)
 
 // make the term creator
 var termCreator = TermCreator();
 
+// update the equation display
 var updateDisplay = function updateDisplay(){
     AlgebraObjectDisplay.clearStatements();
     AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
 }
 
+// what happens when a term in an equation is clicked
 var termClickFunction = function(term){
     appManager.termSelect(term);
     updateDisplay()
 }
 
+
+// update the display of the proposed term to be added
 var updateTermCreatorDisplay = function(){
     let term = termCreator.getTerm()
     let element = document.querySelector('#created-term');
@@ -39,7 +39,13 @@ var updateTermCreatorDisplay = function(){
     element.appendChild(AlgebraObjectDisplay.getHTML(term, ()=>{})); // add the new child
 }
 
-// display the inital state
+var loadEquation = function loadEquation(){
+    let newEquation = equationLoader.getNextEquation()
+    appManager = AppManager(newEquation.LHS, newEquation.RHS);
+    updateDisplay()
+}
+
+// set up the initial display
 window.onload = function(){
     AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
 
@@ -62,7 +68,8 @@ window.onload = function(){
     document.querySelector('#power-up').addEventListener('click',()=>{ termCreator.increasePower(); updateTermCreatorDisplay() })
     document.querySelector('#power-down').addEventListener('click',()=>{ termCreator.decreasePower(); updateTermCreatorDisplay() })
 
-
+    // click operation to load another equation
+    document.querySelector('#load-eqn').addEventListener('click', ()=>{loadEquation()})
 }
 
 
