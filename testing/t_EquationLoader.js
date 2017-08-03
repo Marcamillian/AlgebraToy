@@ -18,4 +18,14 @@ test("Testing Equation loader creation", (t)=>{
     t.end()
 })
 
-test("Parse these into objects that have ")
+test("Parse these into objects", (t)=>{
+
+    let loader = EquationLoader();
+
+    t.ok(true,"Dummy test whilst I'm trying the function")
+
+    //console.log(loader.JSONtoStatement(loader.getNextEquation().LHS))
+    
+    t.end()
+
+})
