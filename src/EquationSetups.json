@@ -49,22 +49,26 @@
     },
     "3":{
         "LHS":{
-            "terms":[
-                {"factor": 5, "variables":{ "z":{"power":1} } },
-                {"factor": -6, "variables":{ "z":{"power":1} } }
+            "terms": [
+                {"factor": 1, "variables":{ "z":{"power":1} } },
+                {"factor": -2, "variables":{ "z":{"power":1} } }
             ],
             "statements":[
-
+                {   "mutliplyFactor":5,
+                    "terms":[
+                        {"factor": 1, "variables":{ "y":{"power":1} } }
+                    ],
+                    "statements":[]
+                }
             ]
         },
         "RHS":{
-          "terms":[ {"factor": 5, "variables":{ "z":{"power":1} } } ],
-          "statements":[
-                {   "multiplyFactor": 6,
-                    "terms": [{"factor": 5, "variables":{ "z":{"power":1} } }],
-                    "statements": []
-                }
-          ]
+            "terms":[
+                {"factor": 2, "variables":{ "y":{"power":1} } }
+            ],
+            "statements":[
+                
+            ]
         }
     }
 }
