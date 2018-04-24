@@ -1,6 +1,6 @@
 test = require('tape')
-AlgebraObjects = require('./../src/AlgebraObjects.js')
-AlgebraObjectDisplay = require('./../src/AlgebraObjectDisplay.js')
+AlgebraObjects = require('./../src/js/AlgebraObjects.js')
+AlgebraObjectDisplay = require('./../src/js/AlgebraObjectDisplay.js')
 
 test.skip('testing term HTML', (t)=>{
 

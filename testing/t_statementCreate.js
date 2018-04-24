@@ -1,6 +1,6 @@
 test = require('tape')
-AlgebraTerm = require('./../src/AlgebraObjects.js').AlgebraTerm;
-AlgebraStatement = require('./../src/AlgebraObjects.js').AlgebraStatement
+AlgebraTerm = require('./../src/js/AlgebraObjects.js').AlgebraTerm;
+AlgebraStatement = require('./../src/js/AlgebraObjects.js').AlgebraStatement
 
 getTestStatement = function getTestStatement(){
     terms = [ AlgebraTerm({factor: 2, variable:'x'}),
