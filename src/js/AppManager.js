@@ -41,30 +41,30 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         return {operation: operation , result: result}
     }
 
-    applyAddOperation = function applyAddOperation(term1, term2){
+    const applyAddOperation = function applyAddOperation(term1, term2){
         return Operations.add(term1, term2)
     }
-    placeAddResult = function placeAddResult(result, placementTerm){
+    const placeAddResult = function placeAddResult(result, placementTerm){
         var placeLocation = placementTerm.getParent()
         placeLocation.addTerm(result);     // add the result to the statement
         return true
     }
-    removeAddComponents = function removeAddComponents(term1, term2){
+    const removeAddComponents = function removeAddComponents(term1, term2){
         var parentStatement = term1.getParent();
         parentStatement.removeTerm(term1);
         parentStatement.removeTerm(term2)
         return true
     }
 
-    applyMultiplyOperation = function applyMultiplyOperation(term1, term2){
+    const applyMultiplyOperation = function applyMultiplyOperation(term1, term2){
         return Operations.multiply(term1, term2)
     }
-    placeMultiplyResult = function placeMultiplyResult(multiResult, placementTerm){
+    const placeMultiplyResult = function placeMultiplyResult(multiResult, placementTerm){
         var placeLocation = placementTerm.getParent().getParent()
         placeLocation.addTerm(multiResult) // add the multiplication result outside the bracket
         return true
     }
-    removeMultiplyComponents = function removeMultiplyComponents(multiplyTerm, term){ // TODO : work out the removal for nested statements
+    const removeMultiplyComponents = function removeMultiplyComponents(multiplyTerm, term){ // TODO : work out the removal for nested statements
         var nestedStatement = term.getParent()
         nestedStatement.removeTerm(term)// remove the term we just multiplied
         if(nestedStatement.isEmpty()){ nestedStatement.getParent().removeStatement(nestedStatement) } // remove the statement if its empty
@@ -78,7 +78,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                     (parentStatement.isMultiplyTerm(term2) ? term2 : undefined)
     }
 
-    const addStatement = function addStatement(statement){
+    const addStatement = function addStatement(statement){ // eslint-disable-line no-unused-vars
         state.statements.push(statement)
     }
 

@@ -83,6 +83,8 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     }
 
     const multiplyStatement = function(multiplyTerm){
+        
+        let multiTerm = undefined;
         statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
         multiTerm.setParent(statement)
         return statement.multiTerm
@@ -110,9 +112,10 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         return statement.name;
     }
 
-    const getStatements = function getStatements(){
-        return statement.statements;
-    }
+    //const getStatements = function getStatements(){
+    //    return statement.statements;
+    //}
+
     const addStatement = function setStatement(addStatement){
         addStatement.setParent(statement) // add the parent ref to the child
         statement.statements.push(addStatement)
@@ -163,8 +166,10 @@ const TermOperators = {
         var firstKeys = Object.keys(firstVars)
         var secondKeys = Object.keys(secondVars)
 
+        let newFactor = undefined;
+
         // Can't add them if they are not the same factor - throw an error 
-        firstKeys.forEach(function(key,index){
+        firstKeys.forEach(function(key){
 
             if(secondKeys.includes(key) == false // if they do not have the same variable
                 || firstVars[key].power != secondVars[key].power){    // the the variable does not have the same power

@@ -12,9 +12,12 @@
   "author": "Marc Vousden",
   "license": "MIT",
   "devDependencies": {
+    "browser-sync": "^2.23.7",
     "browserify": "^14.3.0",
+    "eslint": "^4.19.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
+    "gulp-eslint": "^4.0.2",
     "gulp-sass": "^4.0.1",
     "tape": "^4.6.3"
   },

@@ -1,6 +1,6 @@
-AlgebraObjects = require('./AlgebraObjects.js');
-AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
-AppManager = require('./AppManager.js').AppManager();
+let AlgebraObjects = require('./AlgebraObjects.js');
+let AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
+let AppManager = require('./AppManager.js').AppManager();
 
 // create a term
 var term1 = AlgebraObjects.AlgebraTerm({ factor: 1, variables:{x:{power:1}} } )
