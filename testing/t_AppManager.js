@@ -1,10 +1,10 @@
-test = require('tape')
+var test = require('tape')
 
 var AppManager = require("../src/js/AppManager.js").AppManager
 var AlgebraStatement = require("../src/js/AlgebraObjects.js").AlgebraStatement;
 var AlgebraTerm = require("../src/js/AlgebraObjects.js").AlgebraTerm;
 
-getTestSetup = function getTestSetup(){
+var getTestSetup = function getTestSetup(){
     var terms = [
         AlgebraTerm({factor: 2, variables: {x:{power:1}} }),
         AlgebraTerm({factor: 3, variables: {x:{power:1}} }),

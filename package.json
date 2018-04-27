@@ -12,16 +12,20 @@
   "author": "Marc Vousden",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
     "browser-sync": "^2.23.7",
-    "browserify": "^14.3.0",
+    "browserify": "^16.2.0",
     "eslint": "^4.19.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
+    "gulp-babel": "^7.0.1",
     "gulp-eslint": "^4.0.2",
     "gulp-sass": "^4.0.1",
-    "tape": "^4.6.3"
+    "tap": "^11.1.4",
+    "tape": "^4.6.3",
+    "vinyl-source-stream": "^2.0.0"
   },
-  "dependencies": {
-    "browserify": "^14.4.0"
-  }
+  "dependencies": {}
 }
