@@ -1,8 +1,7 @@
 var test = require('tape')
 
-var AppManager = require("../src/js/AppManager.js").AppManager
-var AlgebraStatement = require("../src/js/AlgebraObjects.js").AlgebraStatement;
-var AlgebraTerm = require("../src/js/AlgebraObjects.js").AlgebraTerm;
+var {AppManager} = require("../src/js/AppManager.js")
+var {AlgebraStatement, AlgebraTerm} = require("../src/js/AlgebraObjects.js");
 
 var getTestSetup = function getTestSetup(){
     var terms = [
@@ -30,6 +29,14 @@ var getTestSetup = function getTestSetup(){
             appManager: appManager
     }
 }
+
+test.skip("testing creating an AppManager", (t)=>{
+    let appManager = AppManager();
+
+    t.notEqual(Object.keys(appManager).length, 0, "providing no objects works")
+
+    t.end()
+})
 
 test("testing the setup",(t)=>{
     var objs = getTestSetup();
@@ -61,10 +68,10 @@ test("testing the click interactions", (t)=>{
     var objs = getTestSetup();
 
     // tetsing the add click interaction
-    t.equals(objs.appManager.termSelect(objs.terms[0]), "term set", "Term is being selected")
+    t.equals(objs.appManager.selectTerm(objs.terms[0]), "term set", "Term is being selected")
     t.equals(objs.appManager.getSelectedTerm(), objs.terms[0], "Check that the term is the selected term");
 
-    var resultObject = objs.appManager.termSelect(objs.terms[1]);
+    var resultObject = objs.appManager.selectTerm(objs.terms[1]);
 
     t.equals(resultObject.operation, "add", "The terms clicked should add")
     t.equals(resultObject.result.getState().factor, 5, "Checking the factor is alright");
@@ -86,10 +93,10 @@ test("Testing the multiply click interaction", (t)=>{
     var objs = getTestSetup()
 
         // test the multiply interaction
-    t.equals(objs.appManager.termSelect(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
+    t.equals(objs.appManager.selectTerm(objs.terms[4]), "term set", "Selecting the first term in the nested statement")
     t.ok(objs.appManager.getSelectedTerm(), objs.terms[4], "Term is selected")
 
-    var resultObject = objs.appManager.termSelect(objs.terms[5])
+    var resultObject = objs.appManager.selectTerm(objs.terms[5])
     t.equals(resultObject.operation, "multiply", "Clicking the nested statements multiplyTerm")
 
     t.ok(resultObject.result, "result is received")

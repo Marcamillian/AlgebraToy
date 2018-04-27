@@ -46,7 +46,7 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
 }
 
 const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // terms == array of terms (should this be an object?)
-    var statement = {
+    var state = {
         name: name,
         terms : terms, // an arrayof terms
         statements: [],
@@ -54,90 +54,91 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
         multiTerm : AlgebraTerm({variable: 1})
     };
         
-    statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
-        term.setParent(statement)
+    state.terms.forEach(function(term){ // make sure all of the terms know who their parent are
+        term.setParent(state)
     })
 
-    const getMultiplyTerm = function getFactor(){
-        return statement.multiTerm;
-    }
 
     const getParent = function getParent(){
-        return statement.parent
+        return state.parent
     }
 
     const setParent = function getParent(parentStatement){
-        return statement.parent = parentStatement
+        return state.parent = parentStatement
     }
     const clearParent = function clearParent(){
-        return statement.parent = undefined;
+        return state.parent = undefined;
+    }
+
+    const getMultiplyTerm = function getFactor(){
+        return state.multiTerm;
     }
 
     const setMultiplyTerm = function (multiplyTerm){
-        multiplyTerm.setParent(statement)
-        return statement.multiTerm = multiplyTerm;
+        multiplyTerm.setParent(state)
+        return state.multiTerm = multiplyTerm;
     }
 
     const isMultiplyTerm = function isMultiplyTerm(checkTerm){
-        return statement.multiTerm == checkTerm;
+        return state.multiTerm == checkTerm;
     }
 
     const multiplyStatement = function(multiplyTerm){
         
         let multiTerm = undefined;
-        statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
-        multiTerm.setParent(statement)
-        return statement.multiTerm
+        state.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
+        multiTerm.setParent(state)
+        return state.multiTerm
     }
 
     const includesTerm = function includesTerm(searchTerm){
-        return (statement.terms.includes(searchTerm)) ? statement.terms.includes(searchTerm) : statement.multiTerm == searchTerm
+        return (state.terms.includes(searchTerm)) ? state.terms.includes(searchTerm) : state.multiTerm == searchTerm
     }
 
     const addTerm = function addTerm(term){
-        return statement.terms.push(term)
+        return state.terms.push(term)
     }
     const removeTerm = function removeTerm(term){
         if(includesTerm(term)){
             var index = terms.indexOf(term);
-            statement.terms[index].clearParent()
-            statement.terms.splice(index,1)
-            return statement.terms
+            state.terms[index].clearParent()
+            state.terms.splice(index,1)
+            return state.terms
         }else{
             return false;
         }
     }
 
     const getName = function getName(){
-        return statement.name;
+        return state.name;
     }
 
     //const getStatements = function getStatements(){
-    //    return statement.statements;
+    //    return state.statements;
     //}
 
     const addStatement = function setStatement(addStatement){
-        addStatement.setParent(statement) // add the parent ref to the child
-        statement.statements.push(addStatement)
+        addStatement.setParent(state) // add the parent ref to the child
+        state.statements.push(addStatement)
     }
     const removeStatement = function removeStatement(removeStatement){
-        if(statement.includesStatement(removeStatement)){
-            var index = statement.statements.indexOf(removeStatement);
-            statement.statements[index].clearParent();
-            return statement.statements.splice(index,1)
+        if(state.includesStatement(removeStatement)){
+            var index = state.statements.indexOf(removeStatement);
+            state.statements[index].clearParent();
+            return state.statements.splice(index,1)
         }else{
             return false
         }
         
     }
     const includesStatement = function includesStatement(searchStatement){
-        return statement.statements.includes(searchStatement)
+        return state.statements.includes(searchStatement)
     }
     const isEmpty = function isEmpty(){
-        return statement.terms < 1
+        return state.terms < 1
     }
 
-    return Object.assign(statement,
+    return Object.assign(state,
         {getMultiplyTerm: getMultiplyTerm,
          setMultiplyTerm: setMultiplyTerm,
          multiplyStatement: multiplyStatement,

@@ -1,14 +1,14 @@
-test = require('tape')
-AlgebraTerm = require('./../src/js/AlgebraObjects.js').AlgebraTerm;
-AlgebraStatement = require('./../src/js/AlgebraObjects.js').AlgebraStatement
+var test = require('tape')
+const {AlgebraTerm, AlgebraStatement} = require('./../src/js/AlgebraObjects.js');
 
-getTestStatement = function getTestStatement(){
-    terms = [ AlgebraTerm({factor: 2, variable:'x'}),
-             AlgebraTerm({factor: 3, variable:'y'}),
-             AlgebraTerm({factor:4})
+const getTestStatement = function getTestStatement(){
+    let terms = [
+        AlgebraTerm({factor: 2, variable:'x'}),
+        AlgebraTerm({factor: 3, variable:'y'}),
+        AlgebraTerm({factor:4})
     ]
 
-    statement = AlgebraStatement([terms[0], terms[1]], undefined, "some statement")
+    let statement = AlgebraStatement([terms[0], terms[1]], undefined, "some statement")
     statement.setMultiplyTerm(terms[2])
 
     return { terms: terms,
@@ -140,7 +140,7 @@ test("Testing remove statement", function(t){
 })
 
 test("Testing isMultiplyTerm", (t)=>{
-    objs = getTestStatement();
+    let objs = getTestStatement();
 
     t.ok(objs.statement.isMultiplyTerm(objs.terms[2]), "Testing to see if the multiply terms is correct")
     t.notok(objs.statement.isMultiplyTerm(objs.terms[1]), "Testing to see if the function fails for something that isn't multiply term")

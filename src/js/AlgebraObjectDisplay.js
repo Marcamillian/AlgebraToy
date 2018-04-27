@@ -1,4 +1,4 @@
-const getHTML = function getHTML(algebraTerm){
+const getHTML = function getHTML(algebraTerm, clickCallback){
 
     //add the contianer
     var termHTML = document.createElement('div');
@@ -36,9 +36,7 @@ const getHTML = function getHTML(algebraTerm){
     termHTML.appendChild(variablesHTML);
 
     // attach click functions
-    termHTML.addEventListener('mouseup', function(){
-        AppManager.termSelect(algebraTerm)
-    })
+    termHTML.addEventListener('mouseup', clickCallback)
 
     return termHTML
 }

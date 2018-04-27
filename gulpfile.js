@@ -20,7 +20,7 @@ gulp.task('default', ['lint','html' ,'styles', 'js'] ,()=>{
   gulp.watch('./src/sass/*.css', ['style']);
   
   browserSync.init({
-    server:'./src/'
+    server:'./dist-gulp/'
   })
   
 });

@@ -1,11 +1,12 @@
-var Operations = require('./AlgebraObjects.js').TermOperators;
+var AlgebraObjects = require('./AlgebraObjects.js');
+var Operations = AlgebraObjects.TermOperators;
 
 const AppManager = function AppManager(LHStatement, RHStatement){
     var state = {
         selectedTerm: undefined,
         statements: [LHStatement, RHStatement]
     }
-    const termSelect = function termSelect(term){ // sets the term to be worked on 
+    const selectTerm = function selectTerm(term){ // sets the term to be worked on 
         if(state.selectedTerm == undefined){ // if there isn't already a selected term --- set the term and exit
             state.selectedTerm = term
             return "term set"
@@ -90,7 +91,8 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     }
 
     return Object.create(
-        { termSelect: termSelect,
+        {
+            selectTerm: selectTerm,
             sameStatement:sameStatement,
             getSelectedTerm: getSelectedTerm
         }

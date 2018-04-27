@@ -60,3 +60,7 @@ TODO: How to deal with clicked STATEMENTS
 
 
 TODO: multiply out - make a new term in the parent statement -- if there is no term left in the statement the statement disappears
+
+TODO: 18-04-27 - Reorganised for gulp build tasks - now need to deal with merge conflicts before bringing into master
+
+TODO: 18-04-27 - Make sure there are statement && appManager render methods
