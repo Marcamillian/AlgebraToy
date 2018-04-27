@@ -7,7 +7,7 @@
     "test": "tap testing/*.js",
     "test_b": "browserify testing/termDisplay.js | tape-run",
     "test_build": "browserify testing/termDisplay.js > dist/bundle.js",
-    "build": "browserify src/ClientApp.js > dist/bundle.js"
+    "build": "browserify src/js/ClientApp.js > dist/bundle.js"
   },
   "author": "Marc Vousden",
   "license": "MIT",
