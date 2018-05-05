@@ -1,10 +1,10 @@
 // something to load JSON file
-var equationData = require('./EquationSetups.json')
 var AlgebraTerm = require('./AlgebraObjects.js').AlgebraTerm;
 var AlgebraStatement = require('./AlgebraObjects.js').AlgebraStatement;
 
-const EquationLoader = function EquationLoader(){
+const EquationLoader = function EquationLoader(equationObject){
     
+    let equationData = equationObject;
     let currentIndex = Object.keys(equationData).length;
 
     const getNextEquationJSON = function getNextEquationJSON(){

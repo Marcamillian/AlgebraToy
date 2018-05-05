@@ -3,9 +3,10 @@ AlgebraObjectDisplay = require('./AlgebraObjectDisplay.js')
 AppManager = require('./AppManager.js').AppManager;
 TermCreator = require('./TermCreator.js')
 EquationLoader = require('./EquationLoader.js')
+EquationObject = require('./EquationSetups.json')
 
 // TODO: import the terms for LSH and RHS from some kind of data store
-var equationLoader = EquationLoader()
+var equationLoader = EquationLoader(EquationObject);
 
 // load in the equation from the loader
 var startEquation = equationLoader.getNextEquation();
