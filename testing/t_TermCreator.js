@@ -1,8 +1,8 @@
 test = require('tape');
 
-var TermCreator = require("../src/TermCreator.js")
-var AlgebraTerm = require("../src/AlgebraObjects.js").AlgebraTerm;
-var Operations = require("../src/AlgebraObjects.js").TermOperators;
+var TermCreator = require("../src/js/TermCreator.js")
+var AlgebraTerm = require("../src/js/AlgebraObjects.js").AlgebraTerm;
+var Operations = require("../src/js/AlgebraObjects.js").TermOperators;
 
 
 test("Making some basic objects", (t)=>{

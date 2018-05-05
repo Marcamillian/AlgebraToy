@@ -1,8 +1,8 @@
 test = require('tape');
 
-var AlgebraObjects = require('./../src/AlgebraObjects.js');
-var AlgebraTerm = require('./../src/AlgebraObjects.js').AlgebraTerm;
-var AlgebraOperators = require('./../src/AlgebraObjects.js').TermOperators;
+var AlgebraObjects = require('./../src/js/AlgebraObjects.js');
+var AlgebraTerm = require('./../src/js/AlgebraObjects.js').AlgebraTerm;
+var AlgebraOperators = require('./../src/js/AlgebraObjects.js').TermOperators;
 
 test('Addition/subtraction Testing', function(t){
 

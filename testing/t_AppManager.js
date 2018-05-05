@@ -1,9 +1,9 @@
 test = require('tape')
 
-var AppManager = require("../src/AppManager.js").AppManager
-var AlgebraStatement = require("../src/AlgebraObjects.js").AlgebraStatement;
-var AlgebraTerm = require("../src/AlgebraObjects.js").AlgebraTerm;
-var Operations = require("../src/AlgebraObjects.js").TermOperators
+var AppManager = require("../src/js/AppManager.js").AppManager
+var AlgebraStatement = require("../src/js/AlgebraObjects.js").AlgebraStatement;
+var AlgebraTerm = require("../src/js/AlgebraObjects.js").AlgebraTerm;
+var Operations = require("../src/js/AlgebraObjects.js").TermOperators
 
 
 getTestSetup = function getTestSetup(){

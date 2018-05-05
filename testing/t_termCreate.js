@@ -1,6 +1,6 @@
 test = require('tape');
 
-var AlgebraObjects = require('./../src/AlgebraObjects.js')  
+var AlgebraObjects = require('./../src/js/AlgebraObjects.js')  
 var AlgebraOperators = AlgebraObjects.TermOperators
 
 test('Term Creation', function(t){
