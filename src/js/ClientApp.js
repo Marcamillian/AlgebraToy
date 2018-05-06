@@ -5,7 +5,6 @@ TermCreator = require('./TermCreator.js')
 EquationLoader = require('./EquationLoader.js')
 EquationObject = require('./EquationSetups.json')
 
-// TODO: import the terms for LSH and RHS from some kind of data store
 var equationLoader = EquationLoader(EquationObject);
 
 // load in the equation from the loader

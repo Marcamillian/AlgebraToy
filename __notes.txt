@@ -60,3 +60,5 @@ TODO: How to deal with clicked STATEMENTS
 
 
 TODO: multiply out - make a new term in the parent statement -- if there is no term left in the statement the statement disappears
+ -- 2018/05/05 I think this is what I'm seeing - multiplying out the LHS on the first equation - end up with a statement that has a factor but no terms
+ --- this is now resolved - am now checking that if the 

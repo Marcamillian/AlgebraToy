@@ -46,11 +46,16 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                 operation = "add";
                 try{
                     result = applyAddOperation(term1, term2)
-                    placeAddResult(result, term1)//TODO: implement these
+                    placeAddResult(result, term1)
                     removeAddComponents(term1, term2)
                 }catch(e){
                     if(/Terms cancelled each other/i.test(e.message)){
+                        let sharedParent = term1.getParent();
                         removeAddComponents(term1, term2)
+                        // !!! TODO: Some check to see if the parent terms object is empty
+                        if(sharedParent.getTerms().length == 0) console.log("THIS PARENT IS NOW EMPTY")
+                          // now put in 0 to multiply through
+
                     }else{ // if its not the error we were looking for - throw it up the chain
                         throw e
                     }

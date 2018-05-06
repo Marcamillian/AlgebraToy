@@ -597,7 +597,6 @@ AppManager = require('./AppManager.js').AppManager;
 TermCreator = require('./TermCreator.js')
 EquationLoader = require('./EquationLoader.js')
 
-// TODO: import the terms for LSH and RHS from some kind of data store
 var equationLoader = EquationLoader()
 
 // load in the equation from the loader
