@@ -53,8 +53,12 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                         let sharedParent = term1.getParent();
                         removeAddComponents(term1, term2)
                         // !!! TODO: Some check to see if the parent terms object is empty
-                        if(sharedParent.getTerms().length == 0) console.log("THIS PARENT IS NOW EMPTY")
+                        if(sharedParent.getTerms().length == 0){
+                            console.log("THIS PARENT IS NOW EMPTY")
+                            if(sharedParent.getName() != 'LHS' && sharedParent.getName() != 'RHS' )sharedParent.getParent().removeStatement(sharedParent);
+                        } 
                           // now put in 0 to multiply through
+                    
 
                     }else{ // if its not the error we were looking for - throw it up the chain
                         throw e
