@@ -67,7 +67,7 @@ test("testing adding terms to a statement", (t)=>{
     var term4 = AlgebraTerm({factor:2, variable: 'b'}) 
     var statement2 = AlgebraStatement([term3, term4])
 
-    t.notok(statement1.getParent(), "statement shouldn't have  a parent")
+    t.throws(statement1.getParent,/This statement has no parent/i , "statement shouldn't have  a parent")
     t.ok(term1.getParent(), "contained term has a parent")
     t.ok(term2.getParent(),  "contained term has a parent")
     t.ok(term1.getParent(), statement1, "statement is the parent")
@@ -160,5 +160,24 @@ test("Testing isMultiplyTerm", (t)=>{
 
     t.ok(objs.statement.isMultiplyTerm(objs.terms[2]), "Testing to see if the multiply terms is correct")
     t.notok(objs.statement.isMultiplyTerm(objs.terms[1]), "Testing to see if the function fails for something that isn't multiply term")
+    t.end()
+})
+
+test("Testing getParent", (t)=>{
+    
+    t.test("Testing successful getParent", (ts)=>{
+        let parentStatement = AlgebraStatement(undefined, undefined, "parent")
+        let childStatement = AlgebraStatement(undefined, parentStatement, undefined);
+         
+        ts.test(childStatement.getParent(), parentStatement, "retrieve parent successfully")
+        ts.end()
+    })
+
+    t.test("Testing getParent when no parent set", (ts)=>{
+        let statement = AlgebraStatement(undefined, undefined, "parent")
+         
+        ts.throws(function(){statement.getParent()}, /This statement has no parent/i , "Throw custom error when parent not defined")
+        ts.end()
+    })
     t.end()
 })

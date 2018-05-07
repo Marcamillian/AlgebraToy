@@ -75,7 +75,7 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     )
 }
 
-const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // terms == array of terms (should this be an object?)
+const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ // terms == array of terms (should this be an object?)
     var statement = {
         name: name,
         terms : terms, // an arrayof terms
@@ -95,6 +95,9 @@ const AlgebraStatement = function AlgebraStatement(terms, parent, name){ // term
     }
 
     const getParent = function getParent(){
+        if(statement.parent == undefined){
+            throw new Error("This statement has no parent")
+        }
         return statement.parent
     }
 
