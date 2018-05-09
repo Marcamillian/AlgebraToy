@@ -181,25 +181,32 @@ test("Testing getParent", (t)=>{
     t.end()
 })
 
-test.skip("Testing wrapStatement", (t)=>{
+test.test("Testing wrapStatement", (t)=>{
 
     t.test("Factor only multiplication", (ts)=>{
         // set up a statement - a + b
-        let statement = AlgebraStatement([
-            AlgebraTerm({ variables: {'a':{}} }),
-            AlgebraTerm({ variables: {'b':{}} })
-        ])
+        let initialParent = AlgebraStatement();
+
+        let statement = AlgebraStatement(
+            [   AlgebraTerm({ variables: {'a':{}} }),
+                AlgebraTerm({ variables: {'b':{}} })
+            ],
+            initialParent
+        )
 
         let multiplyTerm = AlgebraTerm({ factor:2 })
         
-        let result = statement.mutliplyWholeStatement(multiplyTerm);
+        let result = statement.multiplyStatement(multiplyTerm);
 
-        ts.equals(result.getFactor(), multiplyTerm, "Term is correctly set");
+        ts.equals(result.getMultiplyTerm(), multiplyTerm, "Term is correctly set");
         ts.equals(result.getStatements().length, 1, "There is only one sub statement")
         ts.equals(result.getStatements()[0], statement, "The original statement is now the sub statement" )
+        ts.equals(result.getParent(), initialParent, "Parent passed to wrapper correctly")
 
         ts.end()
     })
+
+    t.test()
 
     t.end()
 })
