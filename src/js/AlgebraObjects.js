@@ -107,6 +107,9 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
     const clearParent = function clearParent(){
         return statement.parent = undefined;
     }
+    const hasParent = function hasParent(){
+        return statement.parent != undefined
+    }
 
     const setMultiplyTerm = function (multiplyTerm){
         multiplyTerm.setParent(statement)
@@ -201,6 +204,7 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
          getStatements: getStatements,
          getParent: getParent,
          setParent: setParent,
+         hasParent,
          clearParent: clearParent,
          isEmpty: isEmpty,
          setSelected: setSelected,
