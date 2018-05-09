@@ -52,13 +52,29 @@ Click inside the bracket - hightlight the factor & all other terms in that state
 
 === 
 
-TODO: How to deal with clicked STATEMENTS
+DONE: How to deal with clicked STATEMENTS
  - two statements to compare - which to replace 
    - the one inside the statement (multiply)
    - either one inside the statement
 
 
 
-TODO: multiply out - make a new term in the parent statement -- if there is no term left in the statement the statement disappears
- -- 2018/05/05 I think this is what I'm seeing - multiplying out the LHS on the first equation - end up with a statement that has a factor but no terms
- --- this is now resolved - am now checking that if the 
+DONE : multiply out - make a new term in the parent statement -- if there is no term left in the statement the statement disappears
+-- 2018/05/05 I think this is what I'm seeing - multiplying out the LHS on the first equation - end up with a statement that has a factor but no terms
+--- this is now resolved
+
+=== TODO:  multiply equation 
+
+Currently the ClientApp sets up a button that adds a term to both sides of the equation
+We are looking to multiply both sides by a term
+  - get the existing LHS & right hand sides
+  - LHS - remove the name
+  - LHS - set as a sub-statement of a new wrapping statement
+  - set the multi-term of the wrapping statement to the new term
+  - set the wrapping statement to the statement on the AppManager
+  -- repeat for the RHS
+
+Do a more general handling?
+ - function on the statement to multiply itself by a term
+
+
