@@ -5,15 +5,13 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
         parent: {},
         isSelected: false
     }
-    const init = function init(termValues){
-        state.factor = (termValues != undefined && termValues.factor != undefined) ? termValues.factor:  1;
+    const init = function init( {factor = 1, variables = {} } = {} ){
+        state.factor = factor;
 
-        if (termValues != undefined && termValues.variables){
-            Object.keys(termValues.variables).forEach(function(variableName){
-                state.variables[variableName] = {power: (termValues.variables[variableName].power == undefined)? 1 // account fot the fact that power might not have been stated
-                                                            : termValues.variables[variableName].power };
-            })
-        }
+        Object.keys(variables).forEach(function(variableName){
+            state.variables[variableName] = {power: (variables[variableName].power == undefined)? 1 // account fot the fact that power might not have been stated
+                                                        : variables[variableName].power };
+        })
     }
     const getState = function getState(){
         return Object.assign(state)
@@ -122,7 +120,7 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
 
     const multiplyStatement = function(multiplyTerm){
         statement.multiTerm = TermOperators.multiply(multiTerm, multiplyTerm);
-        multiTerm.setParent(statement)
+        statement.multiTerm.setParent(statement)
         return statement.multiTerm
     }
 

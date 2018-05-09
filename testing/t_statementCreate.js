@@ -1,10 +1,9 @@
-test = require('tape')
-AlgebraTerm = require('./../src/js/AlgebraObjects.js').AlgebraTerm;
-AlgebraStatement = require('./../src/js/AlgebraObjects.js').AlgebraStatement
+let test = require('tape');
+let {AlgebraStatement, AlgebraTerm} = require('./../src/js/AlgebraObjects.js');
 
 getTestStatement = function getTestStatement(){
-    terms = [ AlgebraTerm({factor: 2, variable:'x'}),
-             AlgebraTerm({factor: 3, variable:'y'}),
+    terms = [ AlgebraTerm({factor: 2, variables:{'x':{}} }),
+             AlgebraTerm({factor: 3, variables:{'y':{}}  }),
              AlgebraTerm({factor:4})
     ]
 
@@ -179,5 +178,28 @@ test("Testing getParent", (t)=>{
         ts.throws(function(){statement.getParent()}, /This statement has no parent/i , "Throw custom error when parent not defined")
         ts.end()
     })
+    t.end()
+})
+
+test.skip("Testing wrapStatement", (t)=>{
+
+    t.test("Factor only multiplication", (ts)=>{
+        // set up a statement - a + b
+        let statement = AlgebraStatement([
+            AlgebraTerm({ variables: {'a':{}} }),
+            AlgebraTerm({ variables: {'b':{}} })
+        ])
+
+        let multiplyTerm = AlgebraTerm({ factor:2 })
+        
+        let result = statement.mutliplyWholeStatement(multiplyTerm);
+
+        ts.equals(result.getFactor(), multiplyTerm, "Term is correctly set");
+        ts.equals(result.getStatements().length, 1, "There is only one sub statement")
+        ts.equals(result.getStatements()[0], statement, "The original statement is now the sub statement" )
+
+        ts.end()
+    })
+
     t.end()
 })
