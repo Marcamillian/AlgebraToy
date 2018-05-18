@@ -73,14 +73,15 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     )
 }
 
-const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ // terms == array of terms (should this be an object?)
+const AlgebraStatement = function AlgebraStatement(terms = [], parent, name, reciprocal){ // terms == array of terms (should this be an object?)
     var statement = {
         name: name,
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
         multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
-        isSelected: false
+        isSelected: false,
+        reciprocal: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
