@@ -63,7 +63,7 @@ DONE : multiply out - make a new term in the parent statement -- if there is no 
 -- 2018/05/05 I think this is what I'm seeing - multiplying out the LHS on the first equation - end up with a statement that has a factor but no terms
 --- this is now resolved
 
-=== TODO:  multiply equation 
+=== !! TODO:  multiply equation 
 
 Currently the ClientApp sets up a button that adds a term to both sides of the equation
 We are looking to multiply both sides by a term
@@ -77,4 +77,6 @@ We are looking to multiply both sides by a term
 Do a more general handling?
  - function on the statement to multiply itself by a term
 
-
+!! TOD0 : 2 bugs coming up with current implementation
+- 1 - First call to multiply term seems to be using 1 instead of the specified factor (3)
+- 2 - 2 nested statements gives the incorrect options to multiply out

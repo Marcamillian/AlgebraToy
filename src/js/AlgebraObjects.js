@@ -120,17 +120,9 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
 
     const multiplyStatement = function multiplyStatement(multiplyTerm){
         // create a new wrapper statement
-        let wrapperStatement = AlgebraStatement();
-        // set the multiply statement
-        wrapperStatement.setMultiplyTerm(multiplyTerm);
-        // set the wrapper parent to the same as the wrapped parent
-        wrapperStatement.setParent(this.getParent())
-        // set the old statement as a sub-statement
-        wrapperStatement.addStatement(this)
-
-        // NB - sort out the parent issue?
-
-        return wrapperStatement;
+        let newMultiTerm = TermOperators.multiply(statement.multiTerm,multiplyTerm)
+        statement.setMultiplyTerm(newMultiTerm);
+        return this;
     }
 
     const includesTerm = function includesTerm(searchTerm){

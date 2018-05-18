@@ -45,8 +45,9 @@ html{
 }
 
 
-button.addTerm{
+button.add-term, button.multiply-by-term{
     display: block;
+    margin: 10px;
 }
 
 #created-term *{

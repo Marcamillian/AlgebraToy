@@ -50,9 +50,15 @@ window.onload = function(){
     AlgebraObjectDisplay.updateDisplay(appManager.getStatements(), termClickFunction)
 
     // add in the function to add the terms
-    document.querySelector('.addTerm').addEventListener('click',()=>{
+    document.querySelector('.add-term').addEventListener('click',()=>{
         let term = termCreator.getTerm()
-        appManager.introduceTerm(term)
+        appManager.introduceTerm('add',term)
+        updateDisplay()
+    })
+
+    document.querySelector('.multiply-by-term').addEventListener('click', ()=>{
+        let term = termCreator.getTerm()
+        appManager.introduceTerm('multiply', term);
         updateDisplay()
     })
 

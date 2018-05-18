@@ -24,10 +24,6 @@ test("Parse these into objects", (t)=>{
     let loader = EquationLoader(EquationData);
     let equation = loader.getNextEquation()
 
-    equation.LHS.getTerms().forEach((term)=>{
-        console.log(term.getFactor())
-    })
-
 
     t.ok(true,"Dummy test whilst I'm trying the function")
 

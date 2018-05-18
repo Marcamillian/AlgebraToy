@@ -49,6 +49,7 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     statementHTML.classList.add("statement")
     if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
+    // TODO: This is causing 
     // create the multiply term
     if(statement.hasParent()){ // only add an element for the multiply term if its non-1
         var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction, true);

@@ -49,7 +49,6 @@ test.skip("Testing the term display", (t)=>{
 
 test.skip("Testing the statement display", (t)=>{
 
-    console.log("Is this running")
     var objs = getTestObjects();
 
     var displayHTML = AlgebraObjectDisplay.getStatementHTML(objs.statements.LHS);

@@ -131,7 +131,7 @@ test("Testing the introduceTerms", (t)=>{
 
     t.ok(objs.appManager.introduceTerm, "Checking that this is a function")
 
-    objs.appManager.introduceTerm(addTerm)
+    objs.appManager.introduceTerm('add',addTerm)
     t.notok(objs.appManager.getStatement('LHS').includesTerm(addTerm), "object reference not added to the equation")
     t.notok(objs.appManager.getStatement('RHS').includesTerm(addTerm), "object reference not added to the equation")
     

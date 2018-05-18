@@ -6,8 +6,8 @@ const AppManager = function AppManager(LHStatement, RHStatement){
     var state = {
         selectedTerm: undefined,
         statements: [
-            AlgebraStatement([], undefined, 'LHS'),
-            AlgebraStatement([], undefined, 'RHS'),
+            AlgebraStatement([], undefined),
+            AlgebraStatement([], undefined)
         ]
     }
     state.statements[0].addStatement(LHStatement)
@@ -130,11 +130,30 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         return state.statements
     }
 
-    const introduceTerm = function itroduceTerm(term){
-        state.statements.forEach((statement)=>{
-            let termCopy = Operations.duplicateTerm(term);
-            statement.addTerm(termCopy)
-        })
+    const introduceTerm = function itroduceTerm(operation,term){
+        
+        switch (operation){
+            case "add":
+                state.statements.forEach((statement)=>{
+                    let termCopy = Operations.duplicateTerm(term);
+                    statement.addTerm(termCopy)
+                })
+            break;
+            case "multiply":
+                state.statements.forEach((statement, index)=>{
+                    let termCopy = Operations.duplicateTerm(term);
+                    let outsideTerm = AlgebraStatement();
+                    outsideTerm.addStatement(statement.multiplyStatement(termCopy))
+                    state.statements[index] = outsideTerm
+                })
+            break;
+            case "divide":
+            break
+            default:
+                throw new Error("define an operation")
+            break
+        }
+        
     }
 
     return Object.create(
