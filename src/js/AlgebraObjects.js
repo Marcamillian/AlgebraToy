@@ -173,7 +173,7 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         return statement.statements.includes(searchStatement)
     }
     const isEmpty = function isEmpty(){
-        return statement.terms < 1
+        return statement.terms.length < 1 && statement.statements.length < 1
     }
 
     const setSelected = function setSelected(selectSet){
