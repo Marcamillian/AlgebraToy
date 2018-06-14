@@ -16,4 +16,4 @@ Web app to enourage people to play with the decision making in algebra without w
 - Run `gulp serve`
 
 
-The app is now running on [localhost:8080](localhost:8080)
+The app is now running on [localhost:8080](http://localhost:8080)
