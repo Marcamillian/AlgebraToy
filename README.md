@@ -5,7 +5,7 @@ Web app to enourage people to play with the decision making in algebra without w
 ## Installation 
 
 ### Dependancies
-- Node.js 
+- [Node.js](https://nodejs.org/en/) 
 - npm
 
 ### Running the app
@@ -16,4 +16,4 @@ Web app to enourage people to play with the decision making in algebra without w
 - Run `gulp serve`
 
 
-The app is now running on (localhost:8080)[localhost:8080]
+The app is now running on [localhost:8080](localhost:8080)
