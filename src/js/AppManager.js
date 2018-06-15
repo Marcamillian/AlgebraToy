@@ -33,14 +33,15 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         }
     }
 
-
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
         var result = undefined;
 
         if(sameStatement(term1, term2)){ // if they are in the same statement
             
-            var multiplyTerm = getMultiplyTerm(term1, term2) // this is not picking up multiply
+            var multiplyTerm = getMultiplyTerm(term1, term2)
+            var denominatorTerm = getDenominatorTerm(term1, term2)
+
 
             if(multiplyTerm == undefined){ // -- ADD
                 operation = "add";
@@ -58,6 +59,10 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                     }
                 }
                 
+            }else if(denominatorTerm){
+                // -- DIVIDE
+                operation = "divide";
+                console.log("I'm dividing something")
             }else{  // -- MULTIPLY
                 operation = "multiply"
                 result = applyMultiplyOperation(term1, term2)
@@ -106,9 +111,17 @@ const AppManager = function AppManager(LHStatement, RHStatement){
 
     const getMultiplyTerm = function getMultiplyTerm(term1, term2){
         var parentStatement = term1.getParent()
-
         return (parentStatement.isMultiplyTerm(term1)) ? term1 :
                     (parentStatement.isMultiplyTerm(term2) ? term2 : undefined)
+    }
+
+    const getDenominatorTerm = function getDenominatorTerm(term1, term2){
+        var parentStatement = term1.getParent();
+        return parentStatement.isDenominatorTerm(term1)
+                ? term1
+                : parentStatement.isDenominatorTerm(term2)
+                    ? term2
+                    : undefined
     }
 
     const addStatement = function addStatement(statement){

@@ -80,7 +80,7 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         statements: [],
         parent : parent, // for checking outside
         multiTerm : AlgebraTerm({variable: 1}),
-        reciprocalTerm: AlgebraTerm({variable:1}),
+        denominatorTerm: AlgebraTerm({variable:1}),
         isSelected: false
     };
         
@@ -88,14 +88,14 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         term.setParent(statement)
     })
     statement.multiTerm.setParent(statement) // and the multiplyTerm
-    statement.reciprocalTerm.setParent(statement)
+    statement.denominatorTerm.setParent(statement)
 
     const getMultiplyTerm = function getMultiplyTerm(){
         return statement.multiTerm;
     }
 
-    const getReciprocalTerm = function getReciprocalTerm(){
-        return statement.reciprocalTerm;
+    const getDenominatorTerm = function getDenominatorTerm(){
+        return statement.denominatorTerm;
     }
 
     const getParent = function getParent(){
@@ -120,17 +120,17 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         return statement.multiTerm = multiplyTerm;
     }
 
-    const setReciprocalTerm = function setReciprocalTerm(divideTerm){
+    const setDenominatorTerm = function setDenominatorTerm(divideTerm){
         divideTerm.setParent(statement);
-        return statement.reciprocalTerm = divideTerm;
+        return statement.denominatorTerm = divideTerm;
     }
 
     const isMultiplyTerm = function isMultiplyTerm(checkTerm){
         return statement.multiTerm == checkTerm;
     }
 
-    const isReciprocalTerm = function isReciprocalTerm(checkTerm){
-        return statement.reciprocalTerm == checkTerm
+    const isDenominatorTerm = function isDenominatorTerm(checkTerm){
+        return statement.denominatorTerm == checkTerm
     }
 
     const multiplyStatement = function multiplyStatement(multiplyTerm){
@@ -141,8 +141,8 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
     }
 
     const divideStatement = function divideStatement(divideTerm){
-        let newReciprocalTerm = TermOperators.multiply(statement.reciprocalTerm, divideTerm)
-        statement.setReciprocalTerm(newReciprocalTerm);
+        let newDenominatorTerm = TermOperators.multiply(statement.denominatorTerm, divideTerm)
+        statement.setDenominatorTerm(newDenominatorTerm);
         return this;
     }
 
@@ -213,10 +213,10 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
          setMultiplyTerm,
          multiplyStatement,
          isMultiplyTerm,
-         getReciprocalTerm,
-         setReciprocalTerm,
+         getDenominatorTerm,
+         setDenominatorTerm,
          divideStatement,
-         isReciprocalTerm,
+         isDenominatorTerm,
          addTerm,
          removeTerm,
          includesTerm,

@@ -162,33 +162,33 @@ test("Testing isMultiplyTerm", (t)=>{
     t.end()
 })
 
-test("Testing reciprocal funtions", (t)=>{
-    t.test("set/getReciprocalTerm",(ts)=>{
+test("Testing denominator funtions", (t)=>{
+    t.test("set/getDenominatorTerm",(ts)=>{
         let statement = AlgebraStatement();
-        let reciprocalTerm = AlgebraTerm({factor: 5});
-        let result = statement.setReciprocalTerm(reciprocalTerm);
+        let denominatorTerm = AlgebraTerm({factor: 5});
+        let result = statement.setDenominatorTerm(denominatorTerm);
 
-        ts.equals(statement.getReciprocalTerm(), reciprocalTerm, "Is the set term the same as the get term");
+        ts.equals(statement.getDenominatorTerm(), denominatorTerm, "Is the set term the same as the get term");
         ts.end()
 
     })
 
-    t.test('isReciprocalTerm is true', (ts)=>{
+    t.test('isDenominatorTerm is true', (ts)=>{
         let statement = AlgebraStatement();
-        let reciprocalTerm = AlgebraTerm({factor:5});
-        statement.setReciprocalTerm(reciprocalTerm);
+        let denominatorTerm = AlgebraTerm({factor:5});
+        statement.setDenominatorTerm(denominatorTerm);
         // failing
-        ts.equals(statement.isReciprocalTerm(reciprocalTerm), true, "Correctly identified as true")
+        ts.equals(statement.isDenominatorTerm(denominatorTerm), true, "Correctly identified as true")
         ts.end()
     })
 
-    t.test('isReciprocalTerm is false', (ts)=>{
+    t.test('isDenominatorTerm is false', (ts)=>{
         let statement = AlgebraStatement();
-        let reciprocalTerm = AlgebraTerm({factor:5});
+        let denominatorTerm = AlgebraTerm({factor:5});
         let decoyTerm = AlgebraTerm({factor:5})
-        statement.setReciprocalTerm(reciprocalTerm);
+        statement.setDenominatorTerm(denominatorTerm);
 
-        ts.equals(statement.isReciprocalTerm(decoyTerm), false, "Correctly identified as false")
+        ts.equals(statement.isDenominatorTerm(decoyTerm), false, "Correctly identified as false")
         ts.end()
     })
 
@@ -231,8 +231,8 @@ test("Testing divideStatement", (t)=>{
 
       let result = statement.divideStatement(divideTerm);
 
-      ts.equals(result.getReciprocalTerm().getFactor(), 2, "Reciprocal term set correctly");
-      ts.equals(result.getReciprocalTerm().getParent(), result, "Reciprocal term parent set correctly");
+      ts.equals(result.getDenominatorTerm().getFactor(), 2, "Denominator term set correctly");
+      ts.equals(result.getDenominatorTerm().getParent(), result, "Denominator term parent set correctly");
       ts.equals(result.getParent(), initialParent, "Result is a child of the original statement")
 
       ts.end()
@@ -242,7 +242,7 @@ test("Testing divideStatement", (t)=>{
     t.end()
 })
 
-test.test("Testing multiplyStatement", (t)=>{
+test("Testing multiplyStatement", (t)=>{
 
     t.test("Factor only multiplication - hasParent", (ts)=>{
         // set up a statement - a + b
