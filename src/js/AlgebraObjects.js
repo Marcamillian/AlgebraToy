@@ -73,24 +73,29 @@ const AlgebraTerm = function AlgebraTerm(_arguments){
     )
 }
 
-const AlgebraStatement = function AlgebraStatement(terms = [], parent, name, reciprocal){ // terms == array of terms (should this be an object?)
+const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ // terms == array of terms (should this be an object?)
     var statement = {
         name: name,
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
-        isSelected: false,
-        reciprocal: false
+        multiTerm : AlgebraTerm({variable: 1}),
+        reciprocalTerm: AlgebraTerm({variable:1}),
+        isSelected: false
     };
         
     statement.terms.forEach(function(term){ // make sure all of the terms know who their parent are
         term.setParent(statement)
     })
     statement.multiTerm.setParent(statement) // and the multiplyTerm
+    statement.reciprocalTerm.setParent(statement)
 
-    const getMultiplyTerm = function getFactor(){
+    const getMultiplyTerm = function getMultiplyTerm(){
         return statement.multiTerm;
+    }
+
+    const getReciprocalTerm = function getReciprocalTerm(){
+        return statement.reciprocalTerm;
     }
 
     const getParent = function getParent(){
@@ -110,19 +115,34 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name, rec
         return statement.parent != undefined
     }
 
-    const setMultiplyTerm = function (multiplyTerm){
+    const setMultiplyTerm = function setMultiplyTerm(multiplyTerm){
         multiplyTerm.setParent(statement)
         return statement.multiTerm = multiplyTerm;
+    }
+
+    const setReciprocalTerm = function setReciprocalTerm(divideTerm){
+        divideTerm.setParent(statement);
+        return statement.reciprocalTerm = divideTerm;
     }
 
     const isMultiplyTerm = function isMultiplyTerm(checkTerm){
         return statement.multiTerm == checkTerm;
     }
 
+    const isReciprocalTerm = function isReciprocalTerm(checkTerm){
+        return statement.reciprocalTerm == checkTerm
+    }
+
     const multiplyStatement = function multiplyStatement(multiplyTerm){
         // create a new wrapper statement
         let newMultiTerm = TermOperators.multiply(statement.multiTerm,multiplyTerm)
         statement.setMultiplyTerm(newMultiTerm);
+        return this;
+    }
+
+    const divideStatement = function divideStatement(divideTerm){
+        let newReciprocalTerm = TermOperators.multiply(statement.reciprocalTerm, divideTerm)
+        statement.setReciprocalTerm(newReciprocalTerm);
         return this;
     }
 
@@ -189,26 +209,30 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name, rec
     }
 
     return Object.assign(statement,
-        {getMultiplyTerm: getMultiplyTerm,
-         setMultiplyTerm: setMultiplyTerm,
-         multiplyStatement: multiplyStatement,
-         isMultiplyTerm: isMultiplyTerm,
-         addTerm: addTerm,
-         removeTerm: removeTerm,
-         includesTerm: includesTerm,
-         getTerms: getTerms,
-         getName: getName,
-         addStatement: addStatement,
-         removeStatement: removeStatement,
-         includesStatement: includesStatement,
-         getStatements: getStatements,
-         getParent: getParent,
-         setParent: setParent,
+        {getMultiplyTerm,
+         setMultiplyTerm,
+         multiplyStatement,
+         isMultiplyTerm,
+         getReciprocalTerm,
+         setReciprocalTerm,
+         divideStatement,
+         isReciprocalTerm,
+         addTerm,
+         removeTerm,
+         includesTerm,
+         getTerms,
+         getName,
+         addStatement,
+         removeStatement,
+         includesStatement,
+         getStatements,
+         getParent,
+         setParent,
          hasParent,
-         clearParent: clearParent,
-         isEmpty: isEmpty,
-         setSelected: setSelected,
-         isSelectedStatement: isSelectedStatement
+         clearParent,
+         isEmpty,
+         setSelected,
+         isSelectedStatement
         }
     )
 }
