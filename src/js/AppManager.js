@@ -10,8 +10,8 @@ const AppManager = function AppManager(LHStatement, RHStatement){
             AlgebraStatement([], undefined)
         ]
     }
-    state.statements[0].addStatement(LHStatement)
-    state.statements[1].addStatement(RHStatement)
+    if(LHStatement != undefined) state.statements[0] = LHStatement;
+    if(RHStatement != undefined) state.statements[1] = RHStatement;
 
     const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(state.selectedTerm == undefined || state.selectedTerm == term){ // if there isn't already a selected term --- set the term and exit
@@ -69,6 +69,10 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                 placeMultiplyResult(result, (multiplyTerm != term1) ? term1 : term2 ) // give the one that isn't the multiplyTerm
                 removeMultiplyComponents(multiplyTerm, (multiplyTerm != term1) ? term1 : term2 )
             }
+
+            // check to see if the parent statement is now empty
+            console.log(term1.getParent())
+
 
         }else{
             operation = "not same statement"

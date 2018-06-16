@@ -1,4 +1,4 @@
-const getHTML = function getHTML(algebraTerm, clickFunction, unitFactor){
+const getTermHTML = function getTermHTML(algebraTerm, clickFunction, unitFactor){
 
     //add the contianer
     var termHTML = document.createElement('div');
@@ -49,18 +49,30 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
     statementHTML.classList.add("statement")
     if(statement.isSelectedStatement()){statementHTML.classList.add('selected')}
 
-    // TODO: This is causing 
-    // create the multiply term
-    if(statement.hasParent()){ // only add an element for the multiply term if its non-1
-        var multiplyTermHTML = getHTML(statement.getMultiplyTerm(), clickFunction, true);
-        multiplyTermHTML.classList.add("multiply-term")
+    var bracketHTML = document.createElement('div')
+
+    // == deal with multiply term 
+    let multiplyTerm = statement.getMultiplyTerm();
+    if(multiplyTerm
+        && multiplyTerm.getFactor() != 1
+        && multiplyTerm.getVariables() != {}){
+
+        var multiplyTermHTML = getTermHTML(statement.getMultiplyTerm(), clickFunction, true);
+        multiplyTermHTML.classList.add("multiply-term");
+        
+        bracketHTML.classList.add("bracket")    // display brackets
     }
 
-    // create the bracket - if its not the outside term
-    var bracketHTML = document.createElement('div')
-    if(statement.hasParent()) {    // if the statement has a parent
-            bracketHTML.classList.add("bracket")    // display brackets
+    // deal with denominator term
+    let denominatorTerm = statement.getDenominatorTerm();
+    if( denominatorTerm
+        && denominatorTerm.getFactor() !=1
+        && denominatorTerm.getVariables() != {}){
+
+        console.log("we have a denominator to draw");
+
     }
+
 
     // add in any sub statements
     statement.getStatements().forEach( (subStatement)=>{
@@ -69,7 +81,7 @@ const getStatementHTML = function getStatementHTML(statement, clickFunction){
 
     // create the inside Term HTML
     statement.getTerms().forEach((term)=>{
-        bracketHTML.appendChild(getHTML(term, clickFunction))
+        bracketHTML.appendChild(getTermHTML(term, clickFunction))
     })
 
     // combine all of the HTML that we have
@@ -100,7 +112,7 @@ const clearStatements = function clearStatements(){
 }
 
 module.exports = {
-    getHTML:getHTML,
+    getTermHTML:getTermHTML,
     getStatementHTML,
     updateDisplay: updateDisplay,
     clearStatements: clearStatements

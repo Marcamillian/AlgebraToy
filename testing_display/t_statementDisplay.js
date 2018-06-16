@@ -38,7 +38,7 @@ var getTestObjects = function getTestObjects(){
 test.skip("Testing the term display", (t)=>{
     var objs = getTestObjects();
 
-    var displayHTML = AlgebraObjectDisplay.getHTML(objs.terms[0])
+    var displayHTML = AlgebraObjectDisplay.getTermHTML(objs.terms[0])
     t.ok(displayHTML.querySelector('.factor'), "Has a factor class div")
     t.equal(displayHTML.querySelector('.factor').textContent, '2', "The factor is correct")
 

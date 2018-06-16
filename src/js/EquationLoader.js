@@ -30,13 +30,14 @@ const EquationLoader = function EquationLoader(equationObject){
         }
     }
 
-    const JSONtoStatement = function JSONtoStatement( {terms = [], statements = [], reciprocal = false, multiplyTerm = {} } ){
+    const JSONtoStatement = function JSONtoStatement( {terms = [], statements = [], reciprocal = false, multiplyTerm = {}, denominatorTerm = {} } ){
         // statement has terms
         let termObjects = terms.map((termJSON)=>{
             return JSONtoTerm(termJSON)
         })
         
         multiplyTerm = JSONtoTerm(multiplyTerm)
+        denominatorTerm = JSONtoTerm(denominatorTerm)
 
         // create the core statement
         let statement = AlgebraStatement(termObjects, undefined, undefined, reciprocal)

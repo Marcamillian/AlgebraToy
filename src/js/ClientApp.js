@@ -36,7 +36,7 @@ var updateTermCreatorDisplay = function(){
     while(element.hasChildNodes()){
         element.removeChild(element.lastChild)
     }
-    element.appendChild(AlgebraObjectDisplay.getHTML(term, ()=>{})); // add the new child
+    element.appendChild(AlgebraObjectDisplay.getTermHTML(term, ()=>{})); // add the new child
 }
 
 var loadEquation = function loadEquation(){
