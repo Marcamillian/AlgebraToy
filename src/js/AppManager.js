@@ -52,7 +52,7 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                 }catch(e){
                     if(/Terms cancelled each other/i.test(e.message)){
                         let sharedParent = term1.getParent();
-                        placeAddResult(AlgebraTerm({factor:0}), term1)
+                        //placeAddResult(AlgebraTerm({factor:0}), term1)
                         removeAddComponents(term1, term2)
                     }else{ // if its not the error we were looking for - throw it up the chain
                         throw e
