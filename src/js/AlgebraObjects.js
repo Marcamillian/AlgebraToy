@@ -246,6 +246,9 @@ const TermOperators = {
         var firstKeys = Object.keys(firstVars)
         var secondKeys = Object.keys(secondVars)
 
+        // check they have the same number of variables
+        if(firstKeys.length != secondKeys.length) throw new Error("Variables don't match")
+
         // Can't add them if they are not the same factor - throw an error 
         firstKeys.forEach(function(key,index){
 
