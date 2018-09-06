@@ -5,7 +5,7 @@ AlgebraObjectDisplay = require('./../src/AlgebraObjectDisplay.js')
 test.skip('testing term HTML', (t)=>{
 
     var term = AlgebraObjects.AlgebraTerm;
-    var term1 = AlgebraObjectDisplay.getHTML(term({ factor: 5, variables: {x:{power:1}} }))
+    var term1 = AlgebraObjectDisplay.getTermHTML(term({ factor: 5, variables: {x:{power:1}} }))
 
     // check the factor
     t.ok(term1) // term exists

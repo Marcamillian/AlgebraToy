@@ -44,6 +44,7 @@ test('Addition/subtraction Testing', function(t){
         var term2 = AlgebraTerm({factor: 2, variables:{y:{power:2}} })
         var term3 = AlgebraTerm({factor: -2, variables:{x:{power:4}} })
         var term4 = AlgebraTerm({factor: -4, variables:{x:{power:2}} })
+        var term5 = AlgebraTerm({factor: 2})
 
         // no factor - variables differ
             // variables differ
@@ -53,7 +54,11 @@ test('Addition/subtraction Testing', function(t){
 
             // combining to 0
         ts.throws(function(){AlgebraObjects.TermOperators.add(term1, term4)} , /Terms cancelled each other/i)
-        
+        ts.throws(function(){AlgebraObjects.TermOperators.add()})
+        ts.throws(function(){AlgebraObjects.TermOperators.add(term1, term5)}, /variables don't match/i, "can't add mix of variable and factor")
+        ts.throws(function(){AlgebraObjects.TermOperators.add(term5, term1)}, /variables don't match/i, "can't add mix of variable and factor")
+
+
         ts.end()
     })
 })

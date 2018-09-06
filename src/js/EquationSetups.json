@@ -6,11 +6,12 @@
                 {"factor": -2, "variables":{ "x":{"power":1} } }
             ],
             "statements":[
-                {   "mutliplyFactor":5,
+                {   "multiplyTerm":{ "factor": 5 },
                     "terms":[
                         {"factor": 1, "variables":{ "x":{"power":1} } }
                     ],
-                    "statements":[]
+                    "statements":[],
+                    "reciprocal":[]
                 }
             ]
         },
@@ -30,7 +31,7 @@
                 {"factor": -2, "variables":{ "y":{"power":1} } }
             ],
             "statements":[
-                {   "mutliplyFactor":5,
+                {   "multiplyTerm":{"factor" : 5},
                     "terms":[
                         {"factor": 1, "variables":{ "y":{"power":1} } }
                     ],
@@ -54,7 +55,7 @@
                 {"factor": -2, "variables":{ "z":{"power":1} } }
             ],
             "statements":[
-                {   "mutliplyFactor":5,
+                {   "multiplyTerm":{ "factor":5 },
                     "terms":[
                         {"factor": 1, "variables":{ "y":{"power":1} } }
                     ],

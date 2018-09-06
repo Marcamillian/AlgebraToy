@@ -30,26 +30,29 @@ const EquationLoader = function EquationLoader(equationObject){
         }
     }
 
-    const JSONtoStatement = function JSONtoStatement(statementJSON){
+    const JSONtoStatement = function JSONtoStatement( {terms = [], statements = [], reciprocal = false, multiplyTerm = {}, denominatorTerm = {} } ){
         // statement has terms
-        let termObjects = statementJSON.terms.map((termJSON)=>{
+        let termObjects = terms.map((termJSON)=>{
             return JSONtoTerm(termJSON)
         })
         
+        multiplyTerm = JSONtoTerm(multiplyTerm)
+        denominatorTerm = JSONtoTerm(denominatorTerm)
+
         // create the core statement
-        let statement = AlgebraStatement(termObjects, undefined, undefined)
-        if(statementJSON.multiplyFactor) statement.setMultiplyTerm(statementJSON.multiplyFactor)
+        let statement = AlgebraStatement(termObjects, undefined, undefined, reciprocal)
+        statement.setMultiplyTerm(multiplyTerm)
         
         // add on the childStatements
-        statementJSON.statements.forEach((subStatement)=>{
+        statements.forEach((subStatement)=>{
             statement.addStatement(JSONtoStatement(subStatement))
         })
         
         return statement
     }
 
-    const JSONtoTerm = function JSONtoTerm(termJSON){
-        return AlgebraTerm({factor: termJSON.factor, variables: termJSON.variables})
+    const JSONtoTerm = function JSONtoTerm({ factor, variables}){
+        return AlgebraTerm({factor: factor, variables: variables})
     }
     
     return {

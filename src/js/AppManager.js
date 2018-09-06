@@ -10,8 +10,8 @@ const AppManager = function AppManager(LHStatement, RHStatement){
             AlgebraStatement([], undefined)
         ]
     }
-    state.statements[0].addStatement(LHStatement)
-    state.statements[1].addStatement(RHStatement)
+    if(LHStatement != undefined) state.statements[0] = LHStatement;
+    if(RHStatement != undefined) state.statements[1] = RHStatement;
 
     const termSelect = function termSelect(term){ // sets the term to be worked on 
         if(state.selectedTerm == undefined || state.selectedTerm == term){ // if there isn't already a selected term --- set the term and exit
@@ -33,14 +33,15 @@ const AppManager = function AppManager(LHStatement, RHStatement){
         }
     }
 
-
     const operateOnTerm = function opertateOnTerm(term1, term2){
         var operation = undefined
         var result = undefined;
 
         if(sameStatement(term1, term2)){ // if they are in the same statement
             
-            var multiplyTerm = getMultiplyTerm(term1, term2) // this is not picking up multiply
+            var multiplyTerm = getMultiplyTerm(term1, term2)
+            var denominatorTerm = getDenominatorTerm(term1, term2)
+
 
             if(multiplyTerm == undefined){ // -- ADD
                 operation = "add";
@@ -51,19 +52,27 @@ const AppManager = function AppManager(LHStatement, RHStatement){
                 }catch(e){
                     if(/Terms cancelled each other/i.test(e.message)){
                         let sharedParent = term1.getParent();
-                        placeAddResult(AlgebraTerm({factor:0}), term1)
+                        //placeAddResult(AlgebraTerm({factor:0}), term1)
                         removeAddComponents(term1, term2)
                     }else{ // if its not the error we were looking for - throw it up the chain
                         throw e
                     }
                 }
                 
+            }else if(denominatorTerm){
+                // -- DIVIDE
+                operation = "divide";
+                console.log("I'm dividing something")
             }else{  // -- MULTIPLY
                 operation = "multiply"
                 result = applyMultiplyOperation(term1, term2)
                 placeMultiplyResult(result, (multiplyTerm != term1) ? term1 : term2 ) // give the one that isn't the multiplyTerm
                 removeMultiplyComponents(multiplyTerm, (multiplyTerm != term1) ? term1 : term2 )
             }
+
+            // check to see if the parent statement is now empty
+            console.log(term1.getParent())
+
 
         }else{
             operation = "not same statement"
@@ -106,9 +115,17 @@ const AppManager = function AppManager(LHStatement, RHStatement){
 
     const getMultiplyTerm = function getMultiplyTerm(term1, term2){
         var parentStatement = term1.getParent()
-
         return (parentStatement.isMultiplyTerm(term1)) ? term1 :
                     (parentStatement.isMultiplyTerm(term2) ? term2 : undefined)
+    }
+
+    const getDenominatorTerm = function getDenominatorTerm(term1, term2){
+        var parentStatement = term1.getParent();
+        return parentStatement.isDenominatorTerm(term1)
+                ? term1
+                : parentStatement.isDenominatorTerm(term2)
+                    ? term2
+                    : undefined
     }
 
     const addStatement = function addStatement(statement){

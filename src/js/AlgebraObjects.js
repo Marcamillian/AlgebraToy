@@ -79,7 +79,8 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         terms : terms, // an arrayof terms
         statements: [],
         parent : parent, // for checking outside
-        multiTerm : AlgebraTerm({variable: 1}), // never actually gets its parent set
+        multiTerm : AlgebraTerm({variable: 1}),
+        denominatorTerm: AlgebraTerm({variable:1}),
         isSelected: false
     };
         
@@ -87,9 +88,14 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         term.setParent(statement)
     })
     statement.multiTerm.setParent(statement) // and the multiplyTerm
+    statement.denominatorTerm.setParent(statement)
 
-    const getMultiplyTerm = function getFactor(){
+    const getMultiplyTerm = function getMultiplyTerm(){
         return statement.multiTerm;
+    }
+
+    const getDenominatorTerm = function getDenominatorTerm(){
+        return statement.denominatorTerm;
     }
 
     const getParent = function getParent(){
@@ -109,19 +115,34 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
         return statement.parent != undefined
     }
 
-    const setMultiplyTerm = function (multiplyTerm){
+    const setMultiplyTerm = function setMultiplyTerm(multiplyTerm){
         multiplyTerm.setParent(statement)
         return statement.multiTerm = multiplyTerm;
+    }
+
+    const setDenominatorTerm = function setDenominatorTerm(divideTerm){
+        divideTerm.setParent(statement);
+        return statement.denominatorTerm = divideTerm;
     }
 
     const isMultiplyTerm = function isMultiplyTerm(checkTerm){
         return statement.multiTerm == checkTerm;
     }
 
+    const isDenominatorTerm = function isDenominatorTerm(checkTerm){
+        return statement.denominatorTerm == checkTerm
+    }
+
     const multiplyStatement = function multiplyStatement(multiplyTerm){
         // create a new wrapper statement
         let newMultiTerm = TermOperators.multiply(statement.multiTerm,multiplyTerm)
         statement.setMultiplyTerm(newMultiTerm);
+        return this;
+    }
+
+    const divideStatement = function divideStatement(divideTerm){
+        let newDenominatorTerm = TermOperators.multiply(statement.denominatorTerm, divideTerm)
+        statement.setDenominatorTerm(newDenominatorTerm);
         return this;
     }
 
@@ -188,26 +209,30 @@ const AlgebraStatement = function AlgebraStatement(terms = [], parent, name){ //
     }
 
     return Object.assign(statement,
-        {getMultiplyTerm: getMultiplyTerm,
-         setMultiplyTerm: setMultiplyTerm,
-         multiplyStatement: multiplyStatement,
-         isMultiplyTerm: isMultiplyTerm,
-         addTerm: addTerm,
-         removeTerm: removeTerm,
-         includesTerm: includesTerm,
-         getTerms: getTerms,
-         getName: getName,
-         addStatement: addStatement,
-         removeStatement: removeStatement,
-         includesStatement: includesStatement,
-         getStatements: getStatements,
-         getParent: getParent,
-         setParent: setParent,
+        {getMultiplyTerm,
+         setMultiplyTerm,
+         multiplyStatement,
+         isMultiplyTerm,
+         getDenominatorTerm,
+         setDenominatorTerm,
+         divideStatement,
+         isDenominatorTerm,
+         addTerm,
+         removeTerm,
+         includesTerm,
+         getTerms,
+         getName,
+         addStatement,
+         removeStatement,
+         includesStatement,
+         getStatements,
+         getParent,
+         setParent,
          hasParent,
-         clearParent: clearParent,
-         isEmpty: isEmpty,
-         setSelected: setSelected,
-         isSelectedStatement: isSelectedStatement
+         clearParent,
+         isEmpty,
+         setSelected,
+         isSelectedStatement
         }
     )
 }
@@ -220,6 +245,9 @@ const TermOperators = {
 
         var firstKeys = Object.keys(firstVars)
         var secondKeys = Object.keys(secondVars)
+
+        // check they have the same number of variables
+        if(firstKeys.length != secondKeys.length) throw new Error("Variables don't match")
 
         // Can't add them if they are not the same factor - throw an error 
         firstKeys.forEach(function(key,index){

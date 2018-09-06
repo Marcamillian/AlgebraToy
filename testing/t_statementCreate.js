@@ -162,6 +162,39 @@ test("Testing isMultiplyTerm", (t)=>{
     t.end()
 })
 
+test("Testing denominator funtions", (t)=>{
+    t.test("set/getDenominatorTerm",(ts)=>{
+        let statement = AlgebraStatement();
+        let denominatorTerm = AlgebraTerm({factor: 5});
+        let result = statement.setDenominatorTerm(denominatorTerm);
+
+        ts.equals(statement.getDenominatorTerm(), denominatorTerm, "Is the set term the same as the get term");
+        ts.end()
+
+    })
+
+    t.test('isDenominatorTerm is true', (ts)=>{
+        let statement = AlgebraStatement();
+        let denominatorTerm = AlgebraTerm({factor:5});
+        statement.setDenominatorTerm(denominatorTerm);
+        // failing
+        ts.equals(statement.isDenominatorTerm(denominatorTerm), true, "Correctly identified as true")
+        ts.end()
+    })
+
+    t.test('isDenominatorTerm is false', (ts)=>{
+        let statement = AlgebraStatement();
+        let denominatorTerm = AlgebraTerm({factor:5});
+        let decoyTerm = AlgebraTerm({factor:5})
+        statement.setDenominatorTerm(denominatorTerm);
+
+        ts.equals(statement.isDenominatorTerm(decoyTerm), false, "Correctly identified as false")
+        ts.end()
+    })
+
+    t.end()
+})
+
 test("Testing getParent", (t)=>{
     
     t.test("Testing successful getParent", (ts)=>{
@@ -181,7 +214,35 @@ test("Testing getParent", (t)=>{
     t.end()
 })
 
-test.test("Testing wrapStatement", (t)=>{
+test("Testing divideStatement", (t)=>{
+    
+    t.test("Testing dividing a statement", (ts)=>{
+      let initialParent = AlgebraStatement();
+
+      let statement = AlgebraStatement(
+          [
+              AlgebraTerm({variables: {'a':{}} }),
+              AlgebraTerm({ variables: {'b':{}} })
+          ],
+          initialParent
+      )
+
+      let divideTerm = AlgebraTerm({factor:2})
+
+      let result = statement.divideStatement(divideTerm);
+
+      ts.equals(result.getDenominatorTerm().getFactor(), 2, "Denominator term set correctly");
+      ts.equals(result.getDenominatorTerm().getParent(), result, "Denominator term parent set correctly");
+      ts.equals(result.getParent(), initialParent, "Result is a child of the original statement")
+
+      ts.end()
+    })
+    
+    
+    t.end()
+})
+
+test("Testing multiplyStatement", (t)=>{
 
     t.test("Factor only multiplication - hasParent", (ts)=>{
         // set up a statement - a + b
